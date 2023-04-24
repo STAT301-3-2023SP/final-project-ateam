@@ -17,23 +17,31 @@ execute:
 from: markdown+emoji 
 ---
 
-## Quarto
+## Dataset Overview
+Our [dataset] (https://www.kaggle.com/datasets/lepchenkov/usedcarscatalog) consists of variables that describe cars in the used car market in Belarus on December 2, 2019. There are 38531 observations. Our target variable will be `is_exchangeable`, which is a factor variable that indicates `TRUE` if the used car can be exchanged with another car and `FALSE` if the used car cannot be exchanged with another car. There are 19 predictors, of which 1 is an integer, 5 are characters, 7 are numeric, and 6 are factors.
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+## Issues
+The dataset was relatively clean but there were a couple issues we encountered. On the dataset, there are 10 features labeled as `feature_#`. These features did not have any descriptions, and the author of the dataset indicated that he was not sure what the features represented. So, we decided to take the features out of the dataset. This could harm the performance of our predictions for `is_exchangeable`, as the features could have had high predictor importance towards our outcome variable.
 
-## Running Code
+Potential issues we expect to 
 
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
-
+## Exploring Target Variable and Predictors
+As seen below, our outcome variable does have issues of imbalance. However, this imbalance is not severe. We will deal with the imabalance by splitting the data accordingly. There is no missingness in our outcome variable.
 ```{r}
-1 + 1
+library(tidyverse)
+cars <- read_rds(file = "data/processed/cars_clean.rds")
+
+ggplot(cars, mapping = aes(x = is_exchangeable)) +
+  geom_bar()
+```
+Overall, there is no missingness in 18 of our 19 predictors. The predictor `engine_capacity` does have very minor issues of missingness, which we can just impute.
+```{r}
+library(naniar)
+library(kableExtra)
+
+miss_var_summary(cars) %>% 
+  kbl() %>% 
+  kable_styling()
 ```
 
-You can add options to executable code like this
-
-```{r}
-#| echo: false
-2 * 2
-```
-
-The `echo: false` option disables the printing of code (only output is displayed).
+## Data Splitting and Resampling Plan

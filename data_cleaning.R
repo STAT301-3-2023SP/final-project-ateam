@@ -1,6 +1,7 @@
 # Loading packages
 library(tidyverse)
 library(janitor)
+library(naniar)
 
 cars <- read_csv("data/raw/cars.csv") %>% 
   clean_names() %>% 
@@ -15,6 +16,11 @@ cars <- read_csv("data/raw/cars.csv") %>%
          has_warranty = factor(has_warranty),
          state = factor(state),
          drivetrain = factor(drivetrain),
-         is_exchangeable = factor(is_exchangeable))
+         is_exchangeable = factor(is_exchangeable),
+         year_produced = as.Date(year_produced))
 
-save(cars, file = "data/processed/cars_clean.csv")
+# minimal missingness so don't have to remove any columns
+miss_var_summary(cars)
+
+# save cleaned dataset
+write_rds(cars, file = "data/processed/cars_clean.rds")
