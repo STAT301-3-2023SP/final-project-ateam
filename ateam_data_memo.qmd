@@ -46,11 +46,12 @@ miss_var_summary(cars) %>%
 ```
 
 ## Data Splitting and Resampling Plan
-As we mentioned in our initial exploration, our data wwas relatively unbalanced. To remedy this, we stratified our target variable, `is_exchangeable`, and used a 70/30 split for our training and testing data. 
+As we mentioned in our initial exploration, our data wwas relatively unbalanced. To remedy this, we stratified our target variable, `is_exchangeable`, and used a 70/30 split for our training and testing data. For resampling, we used a cross-validation method. 
 
 ## Models Chosen + Parameters
+The models we chose for this exploration are random forest, logistic regression, boosted tree, KNN, and elastic net. All of these models can be used for a categorical prediction, which is why we decided to use them. There are several parameters that we tuned to make more effective models for our results. These parameters are `mtry()`, `min_n()`, `learn_rate()`, and `neighbors()`. 
 
-## Model Building & Selection
+## Model Building
 
 ## Final Model Analysis
 
