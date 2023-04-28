@@ -20,10 +20,11 @@ from: markdown+emoji
 ## Dataset Overview
 Our [dataset] (https://www.kaggle.com/datasets/lepchenkov/usedcarscatalog) consists of variables that describe cars in the used car market in Belarus on December 2, 2019. There are 38531 observations. Our target variable will be `is_exchangeable`, which is a factor variable that indicates `TRUE` if the used car can be exchanged with another car and `FALSE` if the used car cannot be exchanged with another car. There are 19 predictors, of which 1 is an integer, 5 are characters, 7 are numeric, and 6 are factors.
 
+## Goal
+In this exploration, We'd like to examine ways to predict if the used cars will be exchangeable based on the variables that affect that outcome the most. 
+
 ## Issues
 The dataset was relatively clean but there were a couple issues we encountered. On the dataset, there are 10 features labeled as `feature_#`. These features did not have any descriptions, and the author of the dataset indicated that he was not sure what the features represented. So, we decided to take the features out of the dataset. This could harm the performance of our predictions for `is_exchangeable`, as the features could have had high predictor importance towards our outcome variable.
-
-Potential issues we expect to 
 
 ## Exploring Target Variable and Predictors
 As seen below, our outcome variable does have issues of imbalance. However, this imbalance is not severe. We will deal with the imabalance by splitting the data accordingly. There is no missingness in our outcome variable.
@@ -45,3 +46,15 @@ miss_var_summary(cars) %>%
 ```
 
 ## Data Splitting and Resampling Plan
+As we mentioned in our initial exploration, our data wwas relatively unbalanced. To remedy this, we stratified our target variable, `is_exchangeable`, and used a 70/30 split for our training and testing data. 
+
+## Models Chosen + Parameters
+
+## Model Building & Selection
+
+## Final Model Analysis
+
+## Conclusion
+
+
+

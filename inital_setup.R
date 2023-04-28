@@ -9,10 +9,17 @@ set.seed(1234)
 cars <- read_rds(file = "data/processed/cars_clean.rds")
 
 # split data ----
-cars_split <- initial_split(cars, strata = is_exchangeable, prop = 0.7)
+cars_split <- initial_split(cars, 
+                            strata = is_exchangeable, 
+                            prop = 0.7)
 
 cars_train <- training(cars_split)
 cars_test <- testing(cars_split)
+
+# test for balance
+ggplot(cars_train, mapping = aes(x = is_exchangeable)) +
+  geom_bar()
+
 
 # create recipes ----
 
