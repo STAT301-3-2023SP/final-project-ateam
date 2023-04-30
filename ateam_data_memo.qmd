@@ -17,6 +17,12 @@ execute:
 from: markdown+emoji 
 ---
 
+::: {.callout-important}
+
+[https://github.com/STAT301-3-2023SP/final-project-ateam](https://github.com/STAT301-3-2023SP/final-project-ateam)
+
+:::
+
 ## Dataset Overview
 Our [dataset](https://www.kaggle.com/datasets/lepchenkov/usedcarscatalog) consists of variables that describe cars in the used car market in Belarus on December 2, 2019. There are 38531 observations. Our target variable will be `is_exchangeable`, which is a factor variable that indicates `TRUE` if the used car can be exchanged with another car and `FALSE` if the used car cannot be exchanged with another car. There are 19 predictors, of which 1 is an integer, 5 are characters, 7 are numeric, and 6 are factors.
 
