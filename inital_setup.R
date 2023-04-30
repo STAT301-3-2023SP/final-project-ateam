@@ -38,7 +38,7 @@ null_mod <- null_model() %>%
 rf_mod <- rand_forest(mode = "classification",
                       min_n = tune(),
                       mtry = tune()) %>% 
-  set_engine("ranger")
+  set_engine("ranger", importance = "impurity")
 
 ## logistic regression model ----
 log_reg_mod <- logistic_reg(mode = "classification",
@@ -51,7 +51,7 @@ bt_mod <- boost_tree(mode = "classification",
                      mtry = tune(),
                      min_n = tune(),
                      learn_rate = tune()) %>% 
-  set_engine("xgboost")
+  set_engine("xgboost", importance = "impurity")
 
 ## k nearest neighbors model ----
 knn_mod <- nearest_neighbor(mode = "classification",
@@ -91,6 +91,31 @@ knn_grid <- grid_regular(knn_params, levels = 5)
 en_params <- parameters(en_mod)
 
 en_grid <- grid_regular(en_params, levels = 5)
+
+## mars model ----
+mars_mod <- mars(mode = "classification",
+                 num_terms = tune(),
+                 prod_degree = tune()) %>%
+  set_engine("earth")
+
+## neural network model ----
+nn_mod <- mlp(mode = "classification",
+              hidden_units = tune(),
+              penalty = tune()) %>%
+  set_engine("nnet")
+
+## svm poly model ----
+svm_poly_mod <- svm_poly(mode = "classification", 
+                         cost = tune(),
+                         degree = tune(),
+                         scale_factor = tune()) %>%
+  set_engine("kernlab")
+
+## svm radial model ----
+svm_radial_mod <- svm_rbf(mode = "classification", 
+                          cost = tune(),
+                          rbf_sigma = tune()) %>%
+  set_engine("kernlab")
 
 # create workflow ----
 
