@@ -23,7 +23,6 @@ cars_test <- testing(cars_split)
 ggplot(cars_train, mapping = aes(x = is_exchangeable)) +
   geom_bar()
 
-
 # create recipes ----
 ## kitchen sink
 rec_ks <- recipe(is_exchangeable ~ ., data = cars_train) %>% 
@@ -35,6 +34,40 @@ rec_ks <- recipe(is_exchangeable ~ ., data = cars_train) %>%
   step_corr(all_predictors())
 
 rec_ks %>% 
+  prep() %>% 
+  bake(new_data = NULL) %>% 
+  view()
+
+## recipe with only related predictors
+rec_rel <- recipe(is_exchangeable ~ odometer_value + year_produced + engine_capacity +
+                  price_usd + number_of_photos + engine_has_gas + has_warranty +
+                  state + drivetrain + manufacturer_name + location_region, 
+                data = cars_train) %>% 
+  step_clean_levels(all_nominal_predictors()) %>% 
+  step_dummy(all_nominal_predictors()) %>% 
+  step_zv(all_predictors()) %>% 
+  step_normalize(all_numeric_predictors()) %>% 
+  step_impute_knn(all_predictors()) %>% 
+  step_corr(all_predictors())
+
+rec_rel %>% 
+  prep() %>% 
+  bake(new_data = NULL) %>% 
+  view()
+
+## relationship with log and square root transformations
+rec_log_sqrt <- recipe(is_exchangeable ~ ., data = cars_train) %>%
+  step_rm(up_counter) %>% 
+  step_clean_levels(all_nominal_predictors()) %>% 
+  step_log(engine_capacity, price_usd, duration_listed) %>% 
+  step_sqrt(odometer_value, number_of_photos) %>% 
+  step_dummy(all_nominal_predictors()) %>% 
+  step_zv(all_predictors()) %>% 
+  step_normalize(all_numeric_predictors()) %>% 
+  step_impute_knn(all_predictors()) %>% 
+  step_corr(all_predictors())
+
+rec_log_sqrt %>% 
   prep() %>% 
   bake(new_data = NULL) %>% 
   view()
@@ -79,6 +112,31 @@ en_mod <- multinom_reg(penalty = tune(),
   set_engine("glmnet") %>% 
   set_mode("classification")
 
+## mars model ----
+mars_mod <- mars(mode = "classification",
+                 num_terms = tune(),
+                 prod_degree = tune()) %>%
+  set_engine("earth")
+
+## neural network model ----
+nn_mod <- mlp(mode = "classification",
+              hidden_units = tune(),
+              penalty = tune()) %>%
+  set_engine("nnet")
+
+## svm poly model ----
+svm_poly_mod <- svm_poly(mode = "classification", 
+                         cost = tune(),
+                         degree = tune(),
+                         scale_factor = tune()) %>%
+  set_engine("kernlab")
+
+## svm radial model ----
+svm_radial_mod <- svm_rbf(mode = "classification", 
+                          cost = tune(),
+                          rbf_sigma = tune()) %>%
+  set_engine("kernlab")
+
 # create grids and parameters ----
 ## random forest model ----
 rf_params <- parameters(rf_mod) %>% 
@@ -107,30 +165,6 @@ en_params <- parameters(en_mod)
 
 en_grid <- grid_regular(en_params, levels = 5)
 
-## mars model ----
-mars_mod <- mars(mode = "classification",
-                 num_terms = tune(),
-                 prod_degree = tune()) %>%
-  set_engine("earth")
-
-## neural network model ----
-nn_mod <- mlp(mode = "classification",
-              hidden_units = tune(),
-              penalty = tune()) %>%
-  set_engine("nnet")
-
-## svm poly model ----
-svm_poly_mod <- svm_poly(mode = "classification", 
-                         cost = tune(),
-                         degree = tune(),
-                         scale_factor = tune()) %>%
-  set_engine("kernlab")
-
-## svm radial model ----
-svm_radial_mod <- svm_rbf(mode = "classification", 
-                          cost = tune(),
-                          rbf_sigma = tune()) %>%
-  set_engine("kernlab")
 
 # create workflow ----
 ## null workflow

@@ -1,0 +1,47 @@
+---
+title: "Final Project Progress Memo 2"
+subtitle: "Data Science 3 with R (STAT 301-3)"
+author: "Allie Tong and Alani Cox-Caceres"
+
+format:
+  html:
+    toc: true
+    embed-resources: true
+    code-fold: show
+    link-external-newwindow: true
+    echo: false
+    
+execute:
+  warning: false
+
+from: markdown+emoji 
+---
+
+::: {.callout-important}
+
+[https://github.com/STAT301-3-2023SP/final-project-ateam](https://github.com/STAT301-3-2023SP/final-project-ateam)
+
+:::
+
+## Feature Engineering and Recipe Building
+- We first ensured that there weren't any significant missing issues that could not be imputed and found no significant missingness.
+- We looked at the relationships between each of the predictors and the outcome variable through boxplots and bar graphs. From looking at the relationships, we narrowed one of our recipes to 11 predictors. We plan to test if this improves model performance.
+- Next, we looked at the distribution of the numeric predictors. We found that 5 of the numeric predictors needed either a log or square root transformation to fix their skewed distribution and created a recipe with these transformations.
+  - The variable `up_counter` was heavily right skewed, and none of the transformations were fixing it. So, we decided to remove `up_counter` from this recipe.
+- We also have a kitchen sink recipe to use as a baseline for model performance.
+
+## Models and Model Performance
+We will use `roc_auc` as our performance metric for model performance. Once we have picked our final model and fitted it to our testing set, we will look at both `roc_auc` and `accuracy`.
+
+The models we will be fitting are:
+
+1. Null Model
+2. Random Forest Model
+3. Logistic Regression Model
+4. Boosted Tree Model
+5. KNN Model
+6. Elastic Net Model
+7. MARS Model
+8. Neural Network Model
+9. SVM Poly Model
+10. SVM Radial Model
