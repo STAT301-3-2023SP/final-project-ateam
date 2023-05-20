@@ -30,8 +30,17 @@ from: markdown+emoji
   - The variable `up_counter` was heavily right skewed, and none of the transformations were fixing it. So, we decided to remove `up_counter` from this recipe.
 - We also have a kitchen sink recipe to use as a baseline for model performance.
 
+## Assessment Measures
+The assessment measures we chose to test model performance are accuracy, roc_auc, and a confusion matrix. 
+
+* Accuracy: accuracy measures the proportion of correctly classified predictions over the total number of predictions 
+
+* ROC_AUC: a roc_auc curve measures the probability that any randomly identified positive prediction in ranked higher by the model than a randomly identified negative prediction. It produces an overall evaluation of the model's performance
+
+* Confusion Matrix: a confusion matrix is used to create a table that summarizes the predictions made in a classification model. It identifies the number of true positives, true negatives, false positives, and false negatives 
+
 ## Models and Model Performance
-We will use `roc_auc` as our performance metric for model performance. Once we have picked our final model and fitted it to our testing set, we will look at both `roc_auc` and `accuracy`.
+We will use `roc_auc` as our performance metric for model performance. Once we have picked our final model and fitted it to our testing set, we will look at`roc_auc`, `accuracy`, and visualize a confusion matrix as well.
 
 The models we will be fitting are:
 

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.269">
+<meta name="generator" content="quarto-1.2.245">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -2546,6 +2546,7 @@ vertical-align: -.125em;
    
   <ul>
   <li><a href="#feature-engineering-and-recipe-building" id="toc-feature-engineering-and-recipe-building" class="nav-link active" data-scroll-target="#feature-engineering-and-recipe-building">Feature Engineering and Recipe Building</a></li>
+  <li><a href="#assessment-measures" id="toc-assessment-measures" class="nav-link" data-scroll-target="#assessment-measures">Assessment Measures</a></li>
   <li><a href="#models-and-model-performance" id="toc-models-and-model-performance" class="nav-link" data-scroll-target="#models-and-model-performance">Models and Model Performance</a></li>
   </ul>
 </nav>
@@ -2601,9 +2602,18 @@ Important
 <li>We also have a kitchen sink recipe to use as a baseline for model performance.</li>
 </ul>
 </section>
+<section id="assessment-measures" class="level2">
+<h2 class="anchored" data-anchor-id="assessment-measures">Assessment Measures</h2>
+<p>The assessment measures we chose to test model performance are accuracy, roc_auc, and a confusion matrix.</p>
+<ul>
+<li><p>Accuracy: accuracy measures the proportion of correctly classified predictions over the total number of predictions</p></li>
+<li><p>ROC_AUC: a roc_auc curve measures the probability that any randomly identified positive prediction in ranked higher by the model than a randomly identified negative prediction. It produces an overall evaluation of the model’s performance</p></li>
+<li><p>Confusion Matrix: a confusion matrix is used to create a table that summarizes the predictions made in a classification model. It identifies the number of true positives, true negatives, false positives, and false negatives</p></li>
+</ul>
+</section>
 <section id="models-and-model-performance" class="level2">
 <h2 class="anchored" data-anchor-id="models-and-model-performance">Models and Model Performance</h2>
-<p>We will use <code>roc_auc</code> as our performance metric for model performance. Once we have picked our final model and fitted it to our testing set, we will look at both <code>roc_auc</code> and <code>accuracy</code>.</p>
+<p>We will use <code>roc_auc</code> as our performance metric for model performance. Once we have picked our final model and fitted it to our testing set, we will look at<code>roc_auc</code>, <code>accuracy</code>, and visualize a confusion matrix as well.</p>
 <p>The models we will be fitting are:</p>
 <ol type="1">
 <li>Null Model</li>

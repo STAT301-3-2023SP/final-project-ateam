@@ -58,18 +58,6 @@ As we mentioned in our initial exploration, our data was relatively unbalanced. 
 ## Models Chosen + Parameters
 The models we chose for this exploration are random forest, logistic regression, boosted tree, KNN, elastic net, SVM poly, SVM radial, neural network, and MARS. All of these models can be used for a categorical prediction, which is why we decided to use them. There are several parameters that we tuned to make more effective models for our results. These parameters are `mtry()`, `min_n()`, `learn_rate()`, `neighbors()`, `num_terms`, `prod_degree`, `penalty`, `mixture`, `hidden_units`, `cost`, `degree`, `scale_factor`, and `rbf_sigma`.
 
-## Assessment Measures
-The assessment measures we chose to test model performance are accuracy, F1-Score, and a confusion matrix. 
-
-* Accuracy: accuracy measures the proportion of correctly classified predictions over the total number of predictions 
-
-* F1-Score: the F1-Score calculates the harmonic mean of precision and recall by combining them into one single measurement. It produces a comprehensive evaluation of the model's performance
-
-* Confusion Matrix: a confusion matrix is used to create a table that summarizes the predictions made in a classification model. It identifies the number of true positives, true negatives, false positives, and false negatives.  
-
-## Model Performance
-**Model won't run on my computer rn -- chose boost and null to run
-
 ## Final Model Analysis
 We will use area under the ROC curve as the performance metric to choose our final model. After we fit the final model to the testing set, we will explore both area under the ROC curve and accuracy to explore model performance.
 
