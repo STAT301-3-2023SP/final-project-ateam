@@ -22,7 +22,7 @@ mars_mod <- mars(mode = "classification",
 
 # create grids and parameters ----
 ## elastic net model ----
-en_params <- parameters(en_mod)
+en_params <- extract_parameter_set_dials(en_mod)
 
 en_grid <- grid_regular(en_params, levels = 5)
 

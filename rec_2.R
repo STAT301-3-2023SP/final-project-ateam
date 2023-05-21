@@ -1,6 +1,5 @@
 library(tidyverse)
 library(tidymodels)
-library(textrecipes)
 
 tidymodels_prefer()
 
@@ -26,9 +25,8 @@ ggplot(cars_train, mapping = aes(x = is_exchangeable)) +
 ## recipe with only related predictors
 rec_rel <- recipe(is_exchangeable ~ odometer_value + year_produced + engine_capacity +
                     price_usd + number_of_photos + engine_has_gas + has_warranty +
-                    state + drivetrain + manufacturer_name + location_region, 
+                    state + drivetrain + location_region + manufacturer_name, 
                   data = cars_train) %>% 
-  step_clean_levels(all_nominal_predictors()) %>% 
   step_dummy(all_nominal_predictors()) %>% 
   step_zv(all_predictors()) %>% 
   step_normalize(all_numeric_predictors()) %>% 

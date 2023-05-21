@@ -20,7 +20,7 @@ rf_mod <- rand_forest(mode = "classification",
 
 # create grids and parameters ----
 ## random forest model ----
-rf_params <- parameters(rf_mod) %>% 
+rf_params <- extract_parameter_set_dials(rf_mod) %>% 
   update(mtry = mtry(range = c(1, 19)))
 
 rf_grid <- grid_regular(rf_params, levels = 5)

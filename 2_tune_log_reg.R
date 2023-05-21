@@ -20,7 +20,7 @@ log_reg_mod <- logistic_reg(mode = "classification",
 
 # create grids and parameters ----
 ## logistic regression model ----
-log_reg_params <- parameters(log_reg_mod)
+log_reg_params <- extract_parameter_set_dials(log_reg_mod)
 
 log_reg_grid <- grid_regular(log_reg_params, levels = 5)
 
