@@ -30,8 +30,6 @@ from: markdown+emoji
   - The variable `up_counter` was heavily right skewed, and none of the transformations were fixing it. So, we decided to remove `up_counter` from this recipe.
 - We also have a kitchen sink recipe to use as a baseline for model performance.
 
-**All feature engineering was done on a portion of the training set.**
-
 ## Assessment Measures
 The assessment measures we chose to test model performance are accuracy, roc_auc, and a confusion matrix. 
 
