@@ -30,6 +30,8 @@ from: markdown+emoji
   - The variable `up_counter` was heavily right skewed, and none of the transformations were fixing it. So, we decided to remove `up_counter` from this recipe.
 - We also have a kitchen sink recipe to use as a baseline for model performance.
 
+**All feature engineering was done on a portion of the training set.**
+
 ## Assessment Measures
 The assessment measures we chose to test model performance are accuracy, roc_auc, and a confusion matrix. 
 
@@ -54,3 +56,19 @@ The models we will be fitting are:
 8. Neural Network Model
 9. SVM Poly Model
 10. SVM Radial Model
+
+## Model Tuning Results
+We tuned the KNN model with the recipe that used predictor variables that seemed to have a relationship with `is_exchangeable`.
+```{r}
+library(tidyverse)
+library(kableExtra)
+
+load(file = "results/model_results")
+result_table %>% 
+  kbl() %>% 
+  kable_styling()
+```
+
+
+## Possible Issues
+An issue we need to be aware of when fitting other model types is the character variables. Some of our character variables have a lot of levels, making it difficult to use them in the recipe. We have been getting zero variance errors and level errors.

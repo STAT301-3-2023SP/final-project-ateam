@@ -3,7 +3,16 @@ library(tidyverse)
 library(tictoc)
 set.seed(1234)
 
-load("results/info_null.rda")
+load(file = "results/rec_2_setup.rda")
+
+null_mod <- null_model() %>% 
+  set_engine("parsnip") %>% 
+  set_mode("classification")
+
+null_workflow <- workflow() %>% 
+  add_model(null_mod) %>%
+  # doesn't actually use recipe
+  add_recipe(rec_rel)
 
 tic("Null")
 
