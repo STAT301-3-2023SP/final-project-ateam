@@ -25,7 +25,7 @@ ggplot(cars_train, mapping = aes(x = is_exchangeable)) +
 # create recipes ----
 ## kitchen sink
 rec_ks <- recipe(is_exchangeable ~ ., data = cars_train) %>% 
-  step_clean_levels(all_nominal_predictors()) %>% 
+  step_other(model_name) %>% 
   step_dummy(all_nominal_predictors()) %>% 
   step_zv(all_predictors()) %>% 
   step_normalize(all_numeric_predictors()) %>% 
@@ -36,7 +36,6 @@ rec_ks %>%
   prep() %>% 
   bake(new_data = NULL) %>% 
   view()
-
 
 # create folds ----
 cars_fold <- vfold_cv(cars_train, v = 10, repeats = 5,
