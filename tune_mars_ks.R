@@ -1,6 +1,5 @@
 library(tidyverse)
 library(tidymodels)
-library(textrecipes)
 library(tictoc)
 
 tidymodels_prefer()
@@ -9,7 +8,7 @@ tidymodels_prefer()
 set.seed(1234)
 
 # load in data ---- 
-load("results/rec_1_setup.rda")
+load("results/rec_ks_setup.rda")
 
 
 # create models ----
@@ -22,29 +21,25 @@ mars_mod <- mars(mode = "classification",
 
 # create grids and parameters ----
 ## elastic net model ----
-en_params <- extract_parameter_set_dials(en_mod)
+mars_params <- extract_parameter_set_dials(mars_mod)
 
-en_grid <- grid_regular(en_params, levels = 5)
+mars_grid <- grid_regular(mars_params, levels = 5)
 
 
 # create workflow ----
 ## mars model ----
-mars_workflow <- workflow() %>% 
+mars_workflow_ks <- workflow() %>% 
   add_model(mars_mod) %>% 
   add_recipe(rec_ks)
 
 
-# save workflows and grids ----
-save(mars_workflow, cars_fold, file = "results/info_mars.rda")
-
-
 # tuning/fitting ----
 tic.clearlog()
-tic("mars")
+tic("MARS: KS Recipe")
 
 
-mars_tune <- tune_grid(
-  mars_workflow,
+mars_tune_ks <- tune_grid(
+  mars_workflow_ks,
   resamples = cars_fold,
   grid = mars_grid,
   control = control_grid(save_pred = TRUE,
@@ -55,9 +50,9 @@ toc(log = TRUE)
 
 time_log <- tic.log(format = FALSE)
 
-mars_tictoc <- tibble(model = time_log[[1]]$msg,
+mars_tictoc_ks <- tibble(model = time_log[[1]]$msg,
                       runtime = time_log[[1]]$toc - time_log[[1]]$tic)
 
 
-save(mars_tune, mars_tictoc,
-     file = "results/tuning_mars.rda")
+save(mars_tune_ks, mars_tictoc_ks,
+     file = "results/tuning_mars_ks.rda")
