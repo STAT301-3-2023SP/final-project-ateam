@@ -1,6 +1,5 @@
 library(tidyverse)
 library(tidymodels)
-library(textrecipes)
 library(tictoc)
 
 tidymodels_prefer()
@@ -22,7 +21,7 @@ svm_radial_mod <- svm_rbf(mode = "classification",
 
 # create grids and parameters ----
 ## svm radial model ----
-svm_rad_params <- extract_parameter_set_dials(svm_rad_mod)
+svm_rad_params <- extract_parameter_set_dials(svm_radial_mod)
 
 svm_rad_grid <- grid_regular(svm_rad_params, levels = 5)
 
@@ -40,7 +39,7 @@ tic("SVM Radial: KS Recipe")
 
 
 svm_rad_tune_ks <- tune_grid(
-  svm_rad_workflow_ks,
+  svm_radial_workflow_ks,
   resamples = cars_fold,
   grid = svm_rad_grid,
   control = control_grid(save_pred = TRUE,
