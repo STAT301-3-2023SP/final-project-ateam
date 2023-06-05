@@ -2771,9 +2771,14 @@ border: 0;
    
   <ul>
   <li><a href="#dataset-overview" id="toc-dataset-overview" class="nav-link active" data-scroll-target="#dataset-overview">Dataset Overview</a></li>
+  <li><a href="#goal" id="toc-goal" class="nav-link" data-scroll-target="#goal">Goal</a></li>
   <li><a href="#issues" id="toc-issues" class="nav-link" data-scroll-target="#issues">Issues</a></li>
   <li><a href="#exploring-target-variable-and-predictors" id="toc-exploring-target-variable-and-predictors" class="nav-link" data-scroll-target="#exploring-target-variable-and-predictors">Exploring Target Variable and Predictors</a></li>
   <li><a href="#data-splitting-and-resampling-plan" id="toc-data-splitting-and-resampling-plan" class="nav-link" data-scroll-target="#data-splitting-and-resampling-plan">Data Splitting and Resampling Plan</a></li>
+  <li><a href="#models-chosen-parameters" id="toc-models-chosen-parameters" class="nav-link" data-scroll-target="#models-chosen-parameters">Models Chosen + Parameters</a></li>
+  <li><a href="#assessment-measures" id="toc-assessment-measures" class="nav-link" data-scroll-target="#assessment-measures">Assessment Measures</a></li>
+  <li><a href="#model-performance" id="toc-model-performance" class="nav-link" data-scroll-target="#model-performance">Model Performance</a></li>
+  <li><a href="#final-model-analysis" id="toc-final-model-analysis" class="nav-link" data-scroll-target="#final-model-analysis">Final Model Analysis</a></li>
   </ul>
 </nav>
 </div>
@@ -2803,14 +2808,30 @@ border: 0;
 
 </header>
 
+<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><a href="https://github.com/STAT301-3-2023SP/final-project-ateam">https://github.com/STAT301-3-2023SP/final-project-ateam</a></p>
+</div>
+</div>
 <section id="dataset-overview" class="level2">
 <h2 class="anchored" data-anchor-id="dataset-overview">Dataset Overview</h2>
-<p>Our [dataset] (https://www.kaggle.com/datasets/lepchenkov/usedcarscatalog) consists of variables that describe cars in the used car market in Belarus on December 2, 2019. There are 38531 observations. Our target variable will be <code>is_exchangeable</code>, which is a factor variable that indicates <code>TRUE</code> if the used car can be exchanged with another car and <code>FALSE</code> if the used car cannot be exchanged with another car. There are 19 predictors, of which 1 is an integer, 5 are characters, 7 are numeric, and 6 are factors.</p>
+<p>Our <a href="https://www.kaggle.com/datasets/lepchenkov/usedcarscatalog">dataset</a> consists of variables that describe cars in the used car market in Belarus on December 2, 2019. There are 38531 observations. Our target variable will be <code>is_exchangeable</code>, which is a factor variable that indicates <code>TRUE</code> if the used car can be exchanged with another car and <code>FALSE</code> if the used car cannot be exchanged with another car. There are 19 predictors, of which 1 is an integer, 5 are characters, 7 are numeric, and 6 are factors.</p>
+</section>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">Goal</h2>
+<p>In this exploration, we’d like to examine ways to predict if the used cars will be exchangeable based on the variables that affect that outcome the most. This is a categorical prediction problem. We want to explore what factors make a car exchangeable and will test the predictor importance of various predictors to do so.</p>
 </section>
 <section id="issues" class="level2">
 <h2 class="anchored" data-anchor-id="issues">Issues</h2>
 <p>The dataset was relatively clean but there were a couple issues we encountered. On the dataset, there are 10 features labeled as <code>feature_#</code>. These features did not have any descriptions, and the author of the dataset indicated that he was not sure what the features represented. So, we decided to take the features out of the dataset. This could harm the performance of our predictions for <code>is_exchangeable</code>, as the features could have had high predictor importance towards our outcome variable.</p>
-<p>Potential issues we expect to</p>
 </section>
 <section id="exploring-target-variable-and-predictors" class="level2">
 <h2 class="anchored" data-anchor-id="exploring-target-variable-and-predictors">Exploring Target Variable and Predictors</h2>
@@ -2941,6 +2962,28 @@ border: 0;
 </section>
 <section id="data-splitting-and-resampling-plan" class="level2">
 <h2 class="anchored" data-anchor-id="data-splitting-and-resampling-plan">Data Splitting and Resampling Plan</h2>
+<p>As we mentioned in our initial exploration, our data was relatively unbalanced. To remedy this, we stratified our target variable, <code>is_exchangeable</code>, and used a 70/30 split for our training and testing data. For resampling, we used a cross-validation method. We will have 10 folds with 5 repeats.</p>
+</section>
+<section id="models-chosen-parameters" class="level2">
+<h2 class="anchored" data-anchor-id="models-chosen-parameters">Models Chosen + Parameters</h2>
+<p>The models we chose for this exploration are random forest, logistic regression, boosted tree, KNN, elastic net, SVM poly, SVM radial, neural network, and MARS. All of these models can be used for a categorical prediction, which is why we decided to use them. There are several parameters that we tuned to make more effective models for our results. These parameters are <code>mtry()</code>, <code>min_n()</code>, <code>learn_rate()</code>, <code>neighbors()</code>, <code>num_terms</code>, <code>prod_degree</code>, <code>penalty</code>, <code>mixture</code>, <code>hidden_units</code>, <code>cost</code>, <code>degree</code>, <code>scale_factor</code>, and <code>rbf_sigma</code>.</p>
+</section>
+<section id="assessment-measures" class="level2">
+<h2 class="anchored" data-anchor-id="assessment-measures">Assessment Measures</h2>
+<p>The assessment measures we chose to test model performance are accuracy, F1-Score, and a confusion matrix.</p>
+<ul>
+<li><p>Accuracy: accuracy measures the proportion of correctly classified predictions over the total number of predictions</p></li>
+<li><p>F1-Score: the F1-Score calculates the harmonic mean of precision and recall by combining them into one single measurement. It produces a comprehensive evaluation of the model’s performance</p></li>
+<li><p>Confusion Matrix: a confusion matrix is used to create a table that summarizes the predictions made in a classification model. It identifies the number of true positives, true negatives, false positives, and false negatives.</p></li>
+</ul>
+</section>
+<section id="model-performance" class="level2">
+<h2 class="anchored" data-anchor-id="model-performance">Model Performance</h2>
+<p>**Model won’t run on my computer rn – chose boost and null to run</p>
+</section>
+<section id="final-model-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="final-model-analysis">Final Model Analysis</h2>
+<p>We will use area under the ROC curve as the performance metric to choose our final model. After we fit the final model to the testing set, we will explore both area under the ROC curve and accuracy to explore model performance.</p>
 </section>
 
 </main>

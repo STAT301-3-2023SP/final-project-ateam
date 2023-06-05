@@ -17,11 +17,17 @@ execute:
 from: markdown+emoji 
 ---
 
+::: {.callout-important}
+
+[https://github.com/STAT301-3-2023SP/final-project-ateam](https://github.com/STAT301-3-2023SP/final-project-ateam)
+
+:::
+
 ## Dataset Overview
-Our [dataset] (https://www.kaggle.com/datasets/lepchenkov/usedcarscatalog) consists of variables that describe cars in the used car market in Belarus on December 2, 2019. There are 38531 observations. Our target variable will be `is_exchangeable`, which is a factor variable that indicates `TRUE` if the used car can be exchanged with another car and `FALSE` if the used car cannot be exchanged with another car. There are 19 predictors, of which 1 is an integer, 5 are characters, 7 are numeric, and 6 are factors.
+Our [dataset](https://www.kaggle.com/datasets/lepchenkov/usedcarscatalog) consists of variables that describe cars in the used car market in Belarus on December 2, 2019. There are 38531 observations. Our target variable will be `is_exchangeable`, which is a factor variable that indicates `TRUE` if the used car can be exchanged with another car and `FALSE` if the used car cannot be exchanged with another car. There are 19 predictors, of which 1 is an integer, 5 are characters, 7 are numeric, and 6 are factors.
 
 ## Goal
-In this exploration, We'd like to examine ways to predict if the used cars will be exchangeable based on the variables that affect that outcome the most. 
+In this exploration, we'd like to examine ways to predict if the used cars will be exchangeable based on the variables that affect that outcome the most. This is a categorical prediction problem. We want to explore what factors make a car exchangeable and will test the predictor importance of various predictors to do so.
 
 ## Issues
 The dataset was relatively clean but there were a couple issues we encountered. On the dataset, there are 10 features labeled as `feature_#`. These features did not have any descriptions, and the author of the dataset indicated that he was not sure what the features represented. So, we decided to take the features out of the dataset. This could harm the performance of our predictions for `is_exchangeable`, as the features could have had high predictor importance towards our outcome variable.
@@ -35,6 +41,7 @@ cars <- read_rds(file = "data/processed/cars_clean.rds")
 ggplot(cars, mapping = aes(x = is_exchangeable)) +
   geom_bar()
 ```
+
 Overall, there is no missingness in 18 of our 19 predictors. The predictor `engine_capacity` does have very minor issues of missingness, which we can just impute.
 ```{r}
 library(naniar)
@@ -46,15 +53,11 @@ miss_var_summary(cars) %>%
 ```
 
 ## Data Splitting and Resampling Plan
-As we mentioned in our initial exploration, our data wwas relatively unbalanced. To remedy this, we stratified our target variable, `is_exchangeable`, and used a 70/30 split for our training and testing data. 
+As we mentioned in our initial exploration, our data was relatively unbalanced. To remedy this, we stratified our target variable, `is_exchangeable`, and used a 70/30 split for our training and testing data. For resampling, we used a cross-validation method. We will have 10 folds with 5 repeats.
 
 ## Models Chosen + Parameters
-
-## Model Building & Selection
+The models we chose for this exploration are random forest, logistic regression, boosted tree, KNN, elastic net, SVM poly, SVM radial, neural network, and MARS. All of these models can be used for a categorical prediction, which is why we decided to use them. There are several parameters that we tuned to make more effective models for our results. These parameters are `mtry()`, `min_n()`, `learn_rate()`, `neighbors()`, `num_terms`, `prod_degree`, `penalty`, `mixture`, `hidden_units`, `cost`, `degree`, `scale_factor`, and `rbf_sigma`.
 
 ## Final Model Analysis
-
-## Conclusion
-
-
+We will use area under the ROC curve as the performance metric to choose our final model. After we fit the final model to the testing set, we will explore both area under the ROC curve and accuracy to explore model performance.
 
