@@ -272,9 +272,5 @@ en_tictoc_log_sqrt <- tibble(model = time_log[[1]]$msg,
 
 save(en_tune_log_sqrt, en_tictoc_log_sqrt,
      file = "results/tuning_en_log_sqrt.rda")
-=======
->>>>>>> 09ecc67545282768e93d0a0a7e4bef9e53f4e95e:tune_en_ks.R
-=======
->>>>>>> d88a78f6dfcb0649d983d532b46a7f0a9568333a
 
 

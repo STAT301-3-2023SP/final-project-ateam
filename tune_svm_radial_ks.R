@@ -1,9 +1,6 @@
 library(tidyverse)
 library(tidymodels)
-<<<<<<< HEAD
 library(textrecipes)
-=======
->>>>>>> d88a78f6dfcb0649d983d532b46a7f0a9568333a
 library(tictoc)
 
 tidymodels_prefer()
@@ -25,11 +22,10 @@ svm_radial_mod <- svm_rbf(mode = "classification",
 
 # create grids and parameters ----
 ## svm radial model ----
-<<<<<<< HEAD
-svm_rad_params <- extract_parameter_set_dials(svm_rad_mod)
-=======
 svm_rad_params <- extract_parameter_set_dials(svm_radial_mod)
->>>>>>> d88a78f6dfcb0649d983d532b46a7f0a9568333a
+
+svm_rad_params <- extract_parameter_set_dials(svm_radial_mod)
+
 
 svm_rad_grid <- grid_regular(svm_rad_params, levels = 5)
 
@@ -47,11 +43,8 @@ tic("SVM Radial: KS Recipe")
 
 
 svm_rad_tune_ks <- tune_grid(
-<<<<<<< HEAD
   svm_rad_workflow_ks,
-=======
   svm_radial_workflow_ks,
->>>>>>> d88a78f6dfcb0649d983d532b46a7f0a9568333a
   resamples = cars_fold,
   grid = svm_rad_grid,
   control = control_grid(save_pred = TRUE,
@@ -69,19 +62,3 @@ svm_rad_tictoc_ks <- tibble(model = time_log[[1]]$msg,
 
 save(svm_rad_tune_ks, svm_rad_tictoc_ks,
      file = "results/tuning_svm_rad_ks.rda")
-
-
-<<<<<<< HEAD
-
-
-## rec 2
-
-# set seed ----
-set.seed(1234)
-
-# load in data ---- 
-load("results/rec_2_setup.rda")
-
-
-=======
->>>>>>> d88a78f6dfcb0649d983d532b46a7f0a9568333a
