@@ -55,6 +55,7 @@ nn_tictoc_ks <- tibble(model = time_log[[1]]$msg,
                      runtime = time_log[[1]]$toc - time_log[[1]]$tic)
 
 
+<<<<<<< HEAD
 <<<<<<< HEAD:2_tune_nn.R
 save(nn_tune, nn_tictoc, nn_workflow,
      file = "results/tuning_nn.rda")
@@ -73,3 +74,7 @@ load("results/rec_2_setup.rda")
 save(nn_tune, nn_tictoc_ks, nn_workflow_ks,
      file = "results/tuning_nn_ks.rda")
 >>>>>>> 09ecc67545282768e93d0a0a7e4bef9e53f4e95e:tune_nn_ks.R
+=======
+save(nn_tune, nn_tictoc_ks, nn_workflow_ks,
+     file = "results/tuning_nn_ks.rda")
+>>>>>>> d88a78f6dfcb0649d983d532b46a7f0a9568333a

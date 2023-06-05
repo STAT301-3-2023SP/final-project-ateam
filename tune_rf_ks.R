@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 library(textrecipes)
+=======
+library(tidyverse)
+library(tidymodels)
+>>>>>>> d88a78f6dfcb0649d983d532b46a7f0a9568333a
 library(tictoc)
 
 tidymodels_prefer()
@@ -56,6 +61,7 @@ rf_tictoc_ks <- tibble(model = time_log[[1]]$msg,
 save(rf_tune_ks, rf_tictoc_ks,
      file = "results/tuning_rf_ks.rda")
 
+<<<<<<< HEAD
 
 
 
@@ -67,3 +73,5 @@ set.seed(1234)
 # load in data ---- 
 load("results/rec_2_setup.rda")
 
+=======
+>>>>>>> d88a78f6dfcb0649d983d532b46a7f0a9568333a

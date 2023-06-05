@@ -27,3 +27,11 @@
 # R Environment Variables
 .Renviron
 results/tuning_boost_rel.rda
+<<<<<<< HEAD
+=======
+results/tuning_boost_rel.rda
+results/tuning_boost_rel.rda
+results/tuning_boost_ks.rda
+results/tuning_boost_rel.rda
+results/tuning_boost_ks.rda
+>>>>>>> d88a78f6dfcb0649d983d532b46a7f0a9568333a

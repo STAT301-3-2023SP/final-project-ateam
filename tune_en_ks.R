@@ -4,8 +4,11 @@ library(tictoc)
 
 tidymodels_prefer()
 
+<<<<<<< HEAD
 ## rec 1
 
+=======
+>>>>>>> d88a78f6dfcb0649d983d532b46a7f0a9568333a
 # set seed ----
 set.seed(1234)
 
@@ -30,11 +33,16 @@ en_grid <- grid_regular(en_params, levels = 5)
 
 # create workflow ----
 ## elastic net model ----
+<<<<<<< HEAD
 en_workflow_ks <- workflow() %>% 
+=======
+en_workflow <- workflow() %>% 
+>>>>>>> d88a78f6dfcb0649d983d532b46a7f0a9568333a
   add_model(en_mod) %>% 
   add_recipe(rec_ks)
 
 
+<<<<<<< HEAD
 <<<<<<< HEAD:2_tune_en.R
 # save workflows and grids ----
 save(en_workflow_ks, cars_fold, file = "results/info_en.rda")
@@ -42,17 +50,23 @@ save(en_workflow_ks, cars_fold, file = "results/info_en.rda")
 
 =======
 >>>>>>> 09ecc67545282768e93d0a0a7e4bef9e53f4e95e:tune_en_ks.R
+=======
+>>>>>>> d88a78f6dfcb0649d983d532b46a7f0a9568333a
 # tuning/fitting ----
 tic.clearlog()
 tic("Elastic Net: KS recipe")
 
 
 en_tune_ks <- tune_grid(
+<<<<<<< HEAD
 <<<<<<< HEAD:2_tune_en.R
   en_workflow_ks,
 =======
   en_workflow,
 >>>>>>> 09ecc67545282768e93d0a0a7e4bef9e53f4e95e:tune_en_ks.R
+=======
+  en_workflow,
+>>>>>>> d88a78f6dfcb0649d983d532b46a7f0a9568333a
   resamples = cars_fold,
   grid = en_grid,
   control = control_grid(save_pred = TRUE,
@@ -69,6 +83,7 @@ en_tictoc_ks <- tibble(model = time_log[[1]]$msg,
 
 save(en_tune_ks, en_tictoc_ks,
      file = "results/tuning_en_ks.rda")
+<<<<<<< HEAD
 <<<<<<< HEAD:2_tune_en.R
 
 
@@ -259,5 +274,7 @@ save(en_tune_log_sqrt, en_tictoc_log_sqrt,
      file = "results/tuning_en_log_sqrt.rda")
 =======
 >>>>>>> 09ecc67545282768e93d0a0a7e4bef9e53f4e95e:tune_en_ks.R
+=======
+>>>>>>> d88a78f6dfcb0649d983d532b46a7f0a9568333a
 
 

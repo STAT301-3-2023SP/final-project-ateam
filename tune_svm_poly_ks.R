@@ -1,6 +1,9 @@
 library(tidyverse)
 library(tidymodels)
+<<<<<<< HEAD
 library(textrecipes)
+=======
+>>>>>>> d88a78f6dfcb0649d983d532b46a7f0a9568333a
 library(tictoc)
 
 tidymodels_prefer()
@@ -9,7 +12,11 @@ tidymodels_prefer()
 set.seed(1234)
 
 # load in data ---- 
+<<<<<<< HEAD
 load("results/rec_1_setup.rda")
+=======
+load("results/rec_ks_setup.rda")
+>>>>>>> d88a78f6dfcb0649d983d532b46a7f0a9568333a
 
 
 # create models ----
@@ -29,6 +36,7 @@ svm_poly_grid <- grid_regular(svm_poly_params, levels = 5)
 
 # create workflow ----
 ## svm poly model ----
+<<<<<<< HEAD
 svm_poly_workflow <- workflow() %>% 
   add_model(svm_poly_mod) %>% 
   add_recipe(rec_ks)
@@ -45,18 +53,36 @@ tic("polynomial svm")
 
 svm_poly_tune <- tune_grid(
   svm_poly_workflow,
+=======
+svm_poly_workflow_ks <- workflow() %>% 
+  add_model(svm_poly_mod) %>% 
+  add_recipe(rec_ks)
+
+# tuning/fitting ----
+tic.clearlog()
+tic("Polynomial SVM: KS Recipe")
+
+
+svm_poly_tune_ks <- tune_grid(
+  svm_poly_workflow_ks,
+>>>>>>> d88a78f6dfcb0649d983d532b46a7f0a9568333a
   resamples = cars_fold,
   grid = svm_poly_grid,
   control = control_grid(save_pred = TRUE,
                          save_workflow = TRUE,
+<<<<<<< HEAD
                          parallel_over = "everything"),
   metrics = metric_set(accuracy, f_meas)
+=======
+                         parallel_over = "everything")
+>>>>>>> d88a78f6dfcb0649d983d532b46a7f0a9568333a
 )
 
 toc(log = TRUE)
 
 time_log <- tic.log(format = FALSE)
 
+<<<<<<< HEAD
 svm_poly_tictoc <- tibble(model = time_log[[1]]$msg,
                           runtime = time_log[[1]]$toc - time_log[[1]]$tic)
 
@@ -74,3 +100,10 @@ set.seed(1234)
 
 # load in data ---- 
 load("results/rec_2_setup.rda")
+=======
+svm_poly_tictoc_ks <- tibble(model = time_log[[1]]$msg,
+                          runtime = time_log[[1]]$toc - time_log[[1]]$tic)
+
+save(svm_poly_tune_ks, svm_poly_tictoc_ks,
+     file = "results/tuning_svm_poly_ks.rda")
+>>>>>>> d88a78f6dfcb0649d983d532b46a7f0a9568333a

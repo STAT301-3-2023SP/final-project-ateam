@@ -5,13 +5,20 @@ library(tictoc)
 
 tidymodels_prefer()
 
+<<<<<<< HEAD
 ## rec 1
 
+=======
+>>>>>>> d88a78f6dfcb0649d983d532b46a7f0a9568333a
 # set seed ----
 set.seed(1234)
 
 # load in data ---- 
+<<<<<<< HEAD
 load("results/rec_1_setup.rda")
+=======
+load("results/rec_2_setup.rda")
+>>>>>>> d88a78f6dfcb0649d983d532b46a7f0a9568333a
 
 
 # create models ----
@@ -33,6 +40,7 @@ boost_grid <- grid_regular(boost_params, levels = 5)
 
 # create workflow ----
 ## boosted tree model relation recipe ----
+<<<<<<< HEAD
 boost_workflow_ks <- workflow() %>% 
   add_model(boost_mod) %>% 
   add_recipe(rec_ks)
@@ -101,6 +109,8 @@ boost_grid <- grid_regular(boost_params, levels = 5)
 
 # create workflow ----
 ## boosted tree model relation recipe ----
+=======
+>>>>>>> d88a78f6dfcb0649d983d532b46a7f0a9568333a
 boost_workflow_rel <- workflow() %>% 
   add_model(boost_mod) %>% 
   add_recipe(rec_rel)
@@ -124,12 +134,17 @@ toc(log = TRUE)
 time_log <- tic.log(format = FALSE)
 
 boost_tictoc_rel <- tibble(model = time_log[[1]]$msg,
+<<<<<<< HEAD
                            runtime = time_log[[1]]$toc - time_log[[1]]$tic)
+=======
+                       runtime = time_log[[1]]$toc - time_log[[1]]$tic)
+>>>>>>> d88a78f6dfcb0649d983d532b46a7f0a9568333a
 
 
 save(boost_tune_rel, boost_tictoc_rel,
      file = "results/tuning_boost_rel.rda")
 
+<<<<<<< HEAD
 
 
 
@@ -189,3 +204,11 @@ boost_tictoc_log_sqrt <- tibble(model = time_log[[1]]$msg,
 
 save(boost_tune_log_sqrt, boost_tictoc_log_sqrt,
      file = "results/tuning_boost_log_sqrt.rda")
+=======
+# # Visualize confusion matrix -- don't know if we need this
+# conf_mat(boost_result_1, diagnosis, .pred_class) 
+# 
+# boost_result_1 %>% 
+#   conf_mat(diagnosis, .pred_class) %>% 
+#   autoplot(type = "heatmap")
+>>>>>>> d88a78f6dfcb0649d983d532b46a7f0a9568333a
