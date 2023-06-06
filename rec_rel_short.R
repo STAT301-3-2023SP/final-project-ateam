@@ -23,17 +23,19 @@ cars_train_2 <- slice_sample(cars_train, prop = 0.15)
 ggplot(cars_train, mapping = aes(x = is_exchangeable)) +
   geom_bar()
 
-# create recipes ----
-## kitchen sink
-rec_ks <- recipe(is_exchangeable ~ ., data = cars_train_2) %>% 
-  step_other(model_name) %>% 
+# create recipe ----
+## recipe with only related predictors
+rec_rel <- recipe(is_exchangeable ~ odometer_value + year_produced + engine_capacity +
+                    price_usd + number_of_photos + engine_has_gas + has_warranty +
+                    state + drivetrain + location_region + manufacturer_name, 
+                  data = cars_train_2) %>% 
   step_dummy(all_nominal_predictors()) %>% 
   step_zv(all_predictors()) %>% 
   step_normalize(all_numeric_predictors()) %>% 
   step_impute_knn(all_predictors()) %>% 
   step_corr(all_predictors())
 
-rec_ks %>% 
+rec_rel %>% 
   prep() %>% 
   bake(new_data = NULL) %>% 
   view()
@@ -43,5 +45,5 @@ cars_fold <- vfold_cv(cars_train_2, v = 5, repeats = 3,
                       strata = is_exchangeable)
 
 # save setup
-save(rec_ks, cars_fold, cars_test, cars_train_2,
-     file = "results/rec_ks_short_setup.rda")
+save(rec_rel, cars_fold, cars_test, cars_train_2,
+     file = "results/rec_2_short_setup.rda")

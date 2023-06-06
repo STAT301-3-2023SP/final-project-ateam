@@ -17,8 +17,6 @@ cars_split <- initial_split(cars,
 cars_train <- training(cars_split)
 cars_test <- testing(cars_split)
 
-cars_train_2 <- slice_sample(cars_train, prop = 0.15)
-
 # test for balance
 ggplot(cars_train, mapping = aes(x = is_exchangeable)) +
   geom_bar()
