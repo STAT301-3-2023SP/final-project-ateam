@@ -17,6 +17,16 @@ cars_split <- initial_split(cars,
 cars_train <- training(cars_split)
 cars_test <- testing(cars_split)
 
+# split the training data in half
+split_train <- initial_split(cars_train, prop = 0.5)
+
+# extract the first half of the training data
+cars_train_1 <- training(split_train)
+
+# extract the second half of the training data
+cars_train_2 <- testing(split_train)
+
+
 # test for balance
 ggplot(cars_train, mapping = aes(x = is_exchangeable)) +
   geom_bar()
@@ -26,7 +36,7 @@ ggplot(cars_train, mapping = aes(x = is_exchangeable)) +
 rec_rel <- recipe(is_exchangeable ~ odometer_value + year_produced + engine_capacity +
                     price_usd + number_of_photos + engine_has_gas + has_warranty +
                     state + drivetrain + location_region + manufacturer_name, 
-                  data = cars_train) %>% 
+                  data = cars_train_2) %>% 
   step_dummy(all_nominal_predictors()) %>% 
   step_zv(all_predictors()) %>% 
   step_normalize(all_numeric_predictors()) %>% 
@@ -39,10 +49,10 @@ rec_rel %>%
   view()
 
 # create folds ----
-cars_fold <- vfold_cv(cars_train, v = 5, repeats = 3,
+cars_fold <- vfold_cv(cars_train_2, v = 5, repeats = 3,
                       strata = is_exchangeable)
 
 # save setup
-save(rec_rel, cars_fold, cars_test, cars_train,
+save(rec_rel, cars_fold, cars_test, cars_train_2,
      file = "results/rec_2_setup.rda")
 
