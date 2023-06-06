@@ -33,11 +33,6 @@ knn_workflow_ks <- workflow() %>%
   add_model(knn_mod) %>% 
   add_recipe(rec_ks)
 
-knn_workflow_ks <- workflow() %>% 
-  add_model(knn_mod) %>% 
-  add_recipe(rec_ks)
-
-
 # tuning/fitting ----
 
 ## set up parallel processing
