@@ -38,9 +38,9 @@ rec_ks %>%
 
 # create folds ----
 cars_fold <- vfold_cv(cars_train, v = 10, repeats = 5,
-                       strata = is_exchangeable)
+                      strata = is_exchangeable)
 
 # save setup
-save(rec_ks, cars_fold, cars_test, cars_train,
+save(rec_ks_2, cars_fold, cars_test, cars_train,
      file = "results/rec_ks_setup.rda")
 
