@@ -42,9 +42,5 @@ cars_fold <- vfold_cv(cars_train, v = 10, repeats = 5,
 
 # save setup
 save(rec_ks, cars_fold, cars_test, cars_train,
-<<<<<<< HEAD
-     file = "results/rec_1_setup.rda")
-=======
      file = "results/rec_ks_setup.rda")
->>>>>>> d88a78f6dfcb0649d983d532b46a7f0a9568333a
 
