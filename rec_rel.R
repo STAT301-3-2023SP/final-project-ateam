@@ -39,7 +39,7 @@ rec_rel %>%
   view()
 
 # create folds ----
-cars_fold <- vfold_cv(cars_train, v = 5, repeats = 3,
+cars_fold <- vfold_cv(cars_train, v = 5, repeats = 10,
                       strata = is_exchangeable)
 
 # save setup
