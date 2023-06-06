@@ -8,7 +8,7 @@ tidymodels_prefer()
 set.seed(1234)
 
 # load in data ---- 
-load("results/rec_ks_short_setup.rda")
+load("results/rec_ks_setup.rda")
 
 # create models ----
 ## logistic regression model ----

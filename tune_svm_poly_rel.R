@@ -10,7 +10,7 @@ tidymodels_prefer()
 set.seed(1234)
 
 # load in data ---- 
-load("results/rec_2_setup.rda")
+load("results/rec_2_short_setup.rda")
 
 
 # create models ----
@@ -30,22 +30,18 @@ svm_poly_grid <- grid_regular(svm_poly_params, levels = 5)
 
 # create workflow ----
 ## svm poly model ----
-svm_poly_workflow_rel <- workflow() %>% 
+svm_poly_workflow_rel_short <- workflow() %>% 
   add_model(svm_poly_mod) %>% 
   add_recipe(rec_rel)
 
 
-# save workflows and grids ----
-save(svm_poly_workflow_rel, cars_fold, file = "results/info_svm_poly_rel.rda")
-
-
 # tuning/fitting ----
 tic.clearlog()
-tic("Polynomial SVM: REL Recipe")
+tic("Polynomial SVM: Short REL Recipe")
 
 
-svm_poly_tune_rel <- tune_grid(
-  svm_poly_workflow_rel,
+svm_poly_tune_rel_short <- tune_grid(
+  svm_poly_workflow_rel_short,
   resamples = cars_fold,
   grid = svm_poly_grid,
   control = control_grid(save_pred = TRUE,
@@ -59,8 +55,8 @@ toc(log = TRUE)
 
 time_log <- tic.log(format = FALSE)
 
-svm_poly_tictoc_rel <- tibble(model = time_log[[1]]$msg,
-                          runtime = time_log[[1]]$toc - time_log[[1]]$tic)
+svm_poly_tictoc_rel_short <- tibble(model = time_log[[1]]$msg,
+                              runtime = time_log[[1]]$toc - time_log[[1]]$tic)
 
-save(svm_poly_tune_rel, svm_poly_tictoc_rel,
+save(svm_poly_tune_rel_short, svm_poly_tictoc_rel_short,
      file = "results/tuning_svm_poly_rel.rda")

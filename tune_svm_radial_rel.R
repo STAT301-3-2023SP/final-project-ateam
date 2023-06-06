@@ -1,3 +1,5 @@
+## rec 2
+
 library(tidyverse)
 library(tidymodels)
 library(textrecipes)
@@ -6,13 +8,11 @@ library(tictoc)
 tidymodels_prefer()
 
 
-## rec 2
-
 # set seed ----
 set.seed(1234)
 
 # load in data ---- 
-load("results/rec_2_setup.rda")
+load("results/rec_2_short_setup.rda")
 
 # set seed ----
 set.seed(1234)
@@ -37,18 +37,18 @@ svm_rad_grid <- grid_regular(svm_rad_params, levels = 5)
 
 # create workflow ----
 ## svm radial model ----
-svm_radial_workflow_rel <- workflow() %>% 
+svm_radial_workflow_rel_short <- workflow() %>% 
   add_model(svm_radial_mod) %>% 
   add_recipe(rec_rel)
 
 
 # tuning/fitting ----
 tic.clearlog()
-tic("SVM Radial: REL Recipe")
+tic("SVM Radial: Short REL Recipe")
 
 
-svm_rad_tune_rel <- tune_grid(
-  svm_radial_workflow_rel,
+svm_rad_tune_rel_short <- tune_grid(
+  svm_radial_workflow_rel_short,
   resamples = cars_fold,
   grid = svm_rad_grid,
   control = control_grid(save_pred = TRUE,
@@ -61,9 +61,9 @@ toc(log = TRUE)
 
 time_log <- tic.log(format = FALSE)
 
-svm_rad_tictoc_rel <- tibble(model = time_log[[1]]$msg,
+svm_rad_tictoc_rel_short <- tibble(model = time_log[[1]]$msg,
                              runtime = time_log[[1]]$toc - time_log[[1]]$tic)
 
-save(svm_rad_tune_rel, svm_rad_tictoc_rel,
+save(svm_rad_tune_rel_short, svm_rad_tictoc_rel_short,
      file = "results/tuning_svm_rad_rel.rda")
 
