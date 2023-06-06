@@ -4,16 +4,13 @@ library(tictoc)
 
 tidymodels_prefer()
 
-## rec 1
-
 # set seed ----
 set.seed(1234)
 
 # load in data ---- 
-load("results/rec_ks_setup.rda")
+load("results/rec_2_setup.rda")
 
 # create models ----
-## elastic net model ----
 en_mod <- multinom_reg(penalty = tune(),
                        mixture = tune()) %>%
   set_engine("glmnet") %>% 
@@ -25,20 +22,18 @@ en_params <- extract_parameter_set_dials(en_mod)
 
 en_grid <- grid_regular(en_params, levels = 5)
 
-
 # create workflow ----
 ## elastic net model ----
-en_workflow_ks <- workflow() %>% 
+en_workflow_rel <- workflow() %>% 
   add_model(en_mod) %>% 
-  add_recipe(rec_ks)
+  add_recipe(rec_rel)
 
 # tuning/fitting ----
 tic.clearlog()
-tic("Elastic Net: KS recipe")
+tic("Elastic Net: Relationship recipe")
 
-
-en_tune_ks <- tune_grid(
-  en_workflow_ks,
+en_tune_rel <- tune_grid(
+  en_workflow_rel,
   resamples = cars_fold,
   grid = en_grid,
   control = control_grid(save_pred = TRUE,
@@ -49,10 +44,9 @@ toc(log = TRUE)
 
 time_log <- tic.log(format = FALSE)
 
-en_tictoc_ks <- tibble(model = time_log[[1]]$msg,
-                    runtime = time_log[[1]]$toc - time_log[[1]]$tic)
+en_tictoc_rel <- tibble(model = time_log[[1]]$msg,
+                        runtime = time_log[[1]]$toc - time_log[[1]]$tic)
 
 
-save(en_tune_ks, en_tictoc_ks,
-     file = "results/tuning_en_ks.rda")
-
+save(en_tune_rel, en_tictoc_rel,
+     file = "results/tuning_en_rel.rda")
