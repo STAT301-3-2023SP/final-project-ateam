@@ -47,11 +47,13 @@ As we mentioned in our initial exploration, our data was relatively unbalanced. 
 
 
 ## Assessment Measures
-The assessment measures we chose to test model performance are accuracy, and f_meas. 
+The assessment measures we chose to test model performance are accuracy, roc_auc, and a confusion matrix. 
 
-* accuracy: accuracy measures the proportion of correctly classified predictions over the total number of predictions 
+* Accuracy: accuracy measures the proportion of correctly classified predictions over the total number of predictions 
 
-* f_meas: the f-measure is used to measure the accuracy of a model by using precision and recall to determine how balanced the model's performance is. It calculates the harmonic mean between precision and recall to produce a single metric. 
+* ROC_AUC: a roc_auc curve measures the probability that any randomly identified positive prediction in ranked higher by the model than a randomly identified negative prediction. It produces an overall evaluation of the model's performance
+
+* Confusion Matrix: a confusion matrix is used to create a table that summarizes the predictions made in a classification model. It identifies the number of true positives, true negatives, false positives, and false negatives.
 
 
 ## Model Performance
