@@ -33,8 +33,13 @@ log_reg_workflow_rel <- workflow() %>%
 tic.clearlog()
 tic("Logistic Regression: Relationship Recipe")
 
-log_reg_tune_rel <- log_reg_workflow_rel %>% 
-  tune_grid(cars_fold, grid = log_reg_grid)
+log_reg_tune_rel <- tune_grid(
+    log_reg_workflow_rel,
+    resamples = cars_fold,
+    grid = log_reg_grid,
+    control = control_grid(save_pred = TRUE,
+                           save_workflow = TRUE,
+                           parallel_over = "everything"))
 
 toc(log = TRUE)
 

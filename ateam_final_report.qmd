@@ -105,9 +105,17 @@ The models we will be fitting are:
     - `degree`: A positive number for polynomial degree
     - `scale_factor`: A positive number for the polynomial scaling factor
 - **SVM Radial Model:** The model tries to maximize the width of the margin between classes using a polynomial class boundary.
-  - Tuning paramters:
+  - Tuning parameters:
     - `cost`: A positive number for the cost of predicting a sample within or on the wrong side of the margin
     - `rbf_sigma`: A positive number for radial basis function
+- **Multilayer Perceptron Model:** A neural network where the mapping between inputs and output is non-linear
+  - Tuning parameters:
+    - `hidden_units`: An integer for the number of units in the hidden model
+    - `penalty`: A non-negative numeric value for the amount of weight decay
+- **MARS Model:** A model that uses an algorithm that involves finding a set of simple linear functions to predict complex non-linear problems
+  - Tuning parameters:
+    - `num_terms`: The number of features that will be retained in the final model, including the intercept
+    - `prod_degree`: The highest possible interaction degree
 
 ## Assessment Measures
 We will use `roc_auc` as our performance metric for model performance. Once we have picked our final model and fitted it to our testing set, we will look at`roc_auc`, `accuracy`, and visualize a confusion matrix as well.
@@ -120,7 +128,7 @@ We will use `roc_auc` as our performance metric for model performance. Once we h
 
 
 ## Model Performance
-
+Displayed
 
 ## Issues
 

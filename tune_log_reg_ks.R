@@ -8,7 +8,7 @@ tidymodels_prefer()
 set.seed(1234)
 
 # load in data ---- 
-load("results/rec_ks_setup.rda")
+load("results/rec_ks_short_setup.rda")
 
 # create models ----
 ## logistic regression model ----
@@ -33,8 +33,13 @@ log_reg_workflow_ks <- workflow() %>%
 tic.clearlog()
 tic("Logistic Regression: KS Recipe")
 
-log_reg_tune_ks <- log_reg_workflow_ks %>% 
-  tune_grid(cars_fold, grid = log_reg_grid)
+log_reg_tune_ks <- tune_grid(
+  log_reg_workflow_ks,
+  resamples = cars_fold,
+  grid = log_reg_grid,
+  control = control_grid(save_pred = TRUE,
+                         save_workflow = TRUE,
+                         parallel_over = "everything"))
 
 toc(log = TRUE)
 
