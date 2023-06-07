@@ -74,8 +74,12 @@ model_results <- tibble(model = c("Null", "KNN: KS Recipe",
 
 
 # table of times
-model_times <- bind_rows(knn_tictoc_rel,
-                         null_tictoc) %>% 
+model_times <- bind_rows(null_tictoc, knn_tictoc_ks, knn_tictoc_rel, rf_tictoc_ks,
+                         rf_tictoc_rel, boost_tictoc_ks, boost_tictoc_rel, 
+                         nn_tictoc_ks, nn_tictoc_rel, en_tictoc_ks, en_tictoc_rel,
+                         log_reg_tictoc_ks, log_reg_tictoc_rel, svm_poly_tictoc_ks,
+                         svm_poly_tictoc_rel_short, svm_rad_tictoc_ks, svm_rad_tictoc_rel_short,
+                         mars_tictoc_ks, mars_tictoc_rel) %>% 
   select(model, runtime)
 
 # join tables

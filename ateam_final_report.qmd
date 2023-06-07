@@ -28,16 +28,12 @@ Our [dataset](https://www.kaggle.com/datasets/lepchenkov/usedcarscatalog) consis
 In this exploration, we'd like to examine ways to predict if the used cars will be exchangeable based on the variables that affect that outcome the most. This is a categorical prediction problem. We want to explore what factors make a car exchangeable and will test the predictor importance of various predictors to do so.
 
 ## Data Splitting and Resampling Plan
-As we mentioned in our initial exploration, our data was relatively unbalanced. To remedy this, we stratified our target variable, `is_exchangeable`, and used a 70/30 split for our training and testing data. For resampling, we used a cross-validation method. We will have 10 folds with 5 repeats.
+As we mentioned in our initial exploration, our data was relatively unbalanced. To remedy this, we stratified our target variable, `is_exchangeable`, and used a 70/30 split for our training and testing data. For resampling, we used a cross-validation method. For the models that have shorter runtime, we will use 10 folds with 5 repeats. For the models that have longer runtime, we will use 5 folds and 3 repeats.
 
 ## Feature Engineering
 - We first ensured that there weren't any significant missing issues that could not be imputed and found no significant missingness.
 
 - We looked at the relationships between each of the predictors and the outcome variable through boxplots and bar graphs. From looking at the relationships, we narrowed one of our recipes to 11 predictors. We plan to test if this improves model performance.
-
-- Next, we looked at the distribution of the numeric predictors. We found that 5 of the numeric predictors needed either a log or square root transformation to fix their skewed distribution and created a recipe with these transformations.
-
-  - The variable `up_counter` was heavily right skewed, and none of the transformations were fixing it. So, we decided to remove `up_counter` from this recipe.
 
 - All of the feature engineering was done on a portion of the training set.
 
