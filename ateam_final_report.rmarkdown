@@ -1,0 +1,187 @@
+---
+title: "Final Report"
+subtitle: "Data Science 3 with R (STAT 301-3)"
+author: "ateam: Allie Tong, Alani Cox-Caceres"
+
+
+format:
+  html:
+    toc: true
+    embed-resources: true
+    code-fold: show
+    link-external-newwindow: true
+    echo: false
+    
+execute:
+  warning: false
+
+from: markdown+emoji 
+---
+
+
+## Github Repository
+[https://github.com/STAT301-3-2023SP/final-project-ateam](https://github.com/STAT301-3-2023SP/final-project-ateam)
+
+## Data Overview
+Our [dataset](https://www.kaggle.com/datasets/lepchenkov/usedcarscatalog) consists of variables that describe cars in the used car market in Belarus on December 2, 2019. There are 38531 observations. Our target variable will be `is_exchangeable`, which is a factor variable that indicates `TRUE` if the used car can be exchanged with another car and `FALSE` if the used car cannot be exchanged with another car. There are 19 predictors, of which 1 is an integer, 5 are characters, 7 are numeric, and 6 are factors.
+
+## Goal
+In this exploration, we'd like to examine ways to predict if the used cars will be exchangeable based on the variables that affect that outcome the most. This is a categorical prediction problem. We want to explore what factors make a car exchangeable and will test the predictor importance of various predictors to do so.
+
+## Data Splitting and Resampling Plan
+As we mentioned in our initial exploration, our data was relatively unbalanced. To remedy this, we stratified our target variable, `is_exchangeable`, and used a 70/30 split for our training and testing data. For resampling, we used a cross-validation method. For the models that have shorter runtime, we will use 10 folds with 5 repeats. For the models that have longer runtime, we will use 5 folds and 3 repeats.
+
+## Feature Engineering
+- We first ensured that there weren't any significant missing issues that could not be imputed and found no significant missingness.
+
+- We looked at the relationships between each of the predictors and the outcome variable through boxplots and bar graphs. From looking at the relationships, we narrowed one of our recipes to 11 predictors. We plan to test if this improves model performance.
+
+- All of the feature engineering was done on a portion of the training set.
+
+## Recipe Building
+### Kitchen Sink
+The kitchen sink recipe uses all of the variables in the dataset as predictors with `is_exchangeable` as the outcome variable. It will be used as a baseline to see if variable selection improves model performance. 
+
+I first had to use `step_other()` for `model_name` to deal with the large number of levels the variable had. Then, I dummy encoded all nominal predictors. After, I removed the variables with zero variance and centered and scaled all variables. Lastly, I used `step_impute_knn()` to impute missingess and `step_corr()` to remove variables that have large correlations with other ones.
+
+There is a full kitchen sink recipe and a shortened kitchen sink recipe. The full kitchen sink recipe is performed on the training set of 26971 variables while the shortened kitchen sink recipe is performed on a portion of the training set of 4045 variables. For tuning, the full kitchen sink recipe was used with 10 folds and 5 repeats while the shortened kitchen sink recipe was used with 5 folds and 3 repeats.
+
+### Relationship Recipe
+The relationship recipe uses the variables `odometer_value`, `year_produced`, `engine_capacity`, `price_usd`, `number_of_photos`, `engine_has_gas`, `has_warranty`, `state`, `drivetrain`, `location_region`, and `manufacturer_name`. These 11 variables showed possible relationships with the outcome variable `is_exchangeable`.
+
+I first dummy encoded all nominal predictors. After, I removed the variables with zero variance and centered and scaled all variables. Lastly, I used `step_impute_knn()` to impute missingess and `step_corr()` to remove variables that have large correlations with other ones.
+
+Similar to the kitchen sink model, there is a full relationship recipe and a shortened relationship recipe. The full relationship recipe is performed on the training set of 26971 variables while the shortened relationship recipe is performed on a portion of the training set of 4045 variables. For tuning, the full relationship recipe was used with 10 folds and 5 repeats while the shortened relationship recipe was used with 5 folds and 3 repeats.
+
+### Importance Recipe
+The importance recipe includes variables that had nonzero importance using random forest variable selection. After tuning the random forest model with the kitchen sink model, we looked at each variable's importance. Displayed below is a table of the variables used and their importance in the random forest model.
+
+
+```{r}
+library(tidyverse)
+library(kableExtra)
+load(file = "results/rf_vars.rda")
+rf_vars %>% 
+  kbl() %>% 
+  kable_styling()
+```
+
+
+As seen above, all of the variables used in the relationship recipe have importance. The importance recipe includes 6 more predictors than the relationship recipe.
+
+I first dummy encoded all nominal predictors. After, I removed the variables with zero variance and centered and scaled all variables. Lastly, I used `step_impute_knn()` to impute missingess and `step_corr()` to remove variables that have large correlations with other ones.
+
+We will not use the importance recipe for all of the models but will run the winning model with it to see if the importance recipe does better.
+
+## Models Chosen + Parameters
+The models we will be fitting are:
+- **Null Model** (to use as a baseline): A simple, non-informative model
+  - Doesn't have any main arguments
+- **Random Forest Model:** A model that creates a large number of decision trees, each independent of the others. It involves stratifying the predictor space into a number of simple regions. The predictions typically use the mean or mode response value in the region it belongs.
+  - Tuning parameters:
+    - `min_n`: The number of predictors that will be randomly sampled at each split when creating the tree models
+    - `mtry`: The number of predictors that will be randomly sampled at each split when creating the tree models
+      - Set an upper bound of 17 (max number of predictors a recipe would have)
+- **Boosted Tree Model:** A model that creates a series of decision trees forming an ensemble. Each tree depends on the results of previous trees. All trees in the ensemble are combined to produce a final prediction.
+  - Tuning parameters: 
+    -`min_n`: The minimum number of data points in a node that is required for the node to be split further
+    - `mtry`: The number (or proportion) of predictors that will be randomly sampled at each split when creating the tree models
+      - Set an upper bound of 17 (max number of predictors a recipe would have)
+    - `learn_rate`: The rate at which the boosting algorithm adapts from iteration-to-iteration
+- **K Nearest Neighbors Model:** A model that uses the *K* most similar data points from the training set to predict new samples
+  - Tuning parameters: 
+    - `neighbors`: The number of neighbors to consider
+- **Elastic Net Model:** A model that uses linear predictors to predict multiclass data using the multinomial distribution
+  - Tuning parameters: 
+    - `penalty`: A non-negative number representing the total amount of regularization
+    - `mixture`: A number between zero and one (inclusive) giving the proportion of L1 regularization
+      - Elastic net model interpolates lasso and ridge with 0 < `mixture` < 1
+- **Logistic Regression Model:** This model uses a linear combination of the predictors to calculate or predict the probability of an event occurring.
+  - Tuning parameters: 
+    - `penalty`: A non-negative number representing the total amount of regularization
+    - `mixture`: A number between zero and one (inclusive) giving the proportion of L1 regularization
+      - `mixture` = 1: pure lasso model
+      - `mixture` = 0: ridge regression model
+- **SVM Poly Model:** The model tries to maximize the width of the margin between classes using a nonlinear class boundary.
+  - Tuning parameters:
+    - `cost`: A positive number for the cost of predicting a sample within or on the wrong side of the margin
+    - `degree`: A positive number for polynomial degree
+    - `scale_factor`: A positive number for the polynomial scaling factor
+- **SVM Radial Model:** The model tries to maximize the width of the margin between classes using a polynomial class boundary.
+  - Tuning parameters:
+    - `cost`: A positive number for the cost of predicting a sample within or on the wrong side of the margin
+    - `rbf_sigma`: A positive number for radial basis function
+- **Multilayer Perceptron Model:** A neural network where the mapping between inputs and output is non-linear
+  - Tuning parameters:
+    - `hidden_units`: An integer for the number of units in the hidden model
+    - `penalty`: A non-negative numeric value for the amount of weight decay
+- **MARS Model:** A model that uses an algorithm that involves finding a set of simple linear functions to predict complex non-linear problems
+  - Tuning parameters:
+    - `num_terms`: The number of features that will be retained in the final model, including the intercept
+    - `prod_degree`: The highest possible interaction degree
+
+## Assessment Measures
+We will use `roc_auc` as our performance metric for model performance. Once we have picked our final model and fitted it to our testing set, we will look at`roc_auc`, `accuracy`, and visualize a confusion matrix as well.
+
+* Accuracy: accuracy measures the proportion of correctly classified predictions over the total number of predictions 
+
+* ROC_AUC: a roc_auc curve measures the probability that any randomly identified positive prediction is ranked higher by the model than a randomly identified negative prediction. It produces an overall evaluation of the model's performance
+
+* Confusion Matrix: a confusion matrix is used to create a table that summarizes the predictions made in a classification model. It identifies the number of true positives, true negatives, false positives, and false negatives.
+
+
+## Model Performance
+Displayed below is a graph of model results.
+
+As said before, the long recipes have 10 folds and 5 repeats and are performed on the training set of 26971. The short recipes have 5 folds and 3 repeats and are performed on a portion of the training set of 4045 variables.
+
+We tuned a random forest model with the importance recipe, as the random forest model with the kitchen sink recipe had the lowest `roc_auc`. The random forest with the importance recipe performed slightly worse than the random forest with the kitchen sink recipe.
+
+```{r}
+load(file = "results/model_results")
+result_table %>% 
+  kbl() %>% 
+  kable_styling()
+```
+
+
+Next, we will visualize the best performing models. We will be doing this with all of the models that had an `roc_auc` over `0.65`.
+
+**Kitchen Sink Recipe (long)**
+
+```{r}
+load(file = "results/result_graphs")
+result_ks_graph_long
+```
+
+
+**Kitchen Sink Recipe (short)**
+
+```{r}
+result_ks_graph_short
+```
+
+
+**Relationship Recipe**
+
+```{r}
+result_rel_graph
+```
+
+
+**Importance Recipe**
+
+```{r}
+result_imp_graph
+```
+
+
+All of the models have small confidence intervals, except the neural network with the kitchen sink recipe and the random forest with the importance recipe.
+
+## Issues
+
+
+## Final Model Analysis
+
+
+
