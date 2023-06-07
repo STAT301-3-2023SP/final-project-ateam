@@ -59,17 +59,13 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="data-splitting-and-resampling-plan" class="level2">
 <h2 class="anchored" data-anchor-id="data-splitting-and-resampling-plan">Data Splitting and Resampling Plan</h2>
-<p>As we mentioned in our initial exploration, our data was relatively unbalanced. To remedy this, we stratified our target variable, <code>is_exchangeable</code>, and used a 70/30 split for our training and testing data. For resampling, we used a cross-validation method. We will have 10 folds with 5 repeats.</p>
+<p>As we mentioned in our initial exploration, our data was relatively unbalanced. To remedy this, we stratified our target variable, <code>is_exchangeable</code>, and used a 70/30 split for our training and testing data. For resampling, we used a cross-validation method. For the models that have shorter runtime, we will use 10 folds with 5 repeats. For the models that have longer runtime, we will use 5 folds and 3 repeats.</p>
 </section>
 <section id="feature-engineering" class="level2">
 <h2 class="anchored" data-anchor-id="feature-engineering">Feature Engineering</h2>
 <ul>
 <li><p>We first ensured that there weren’t any significant missing issues that could not be imputed and found no significant missingness.</p></li>
 <li><p>We looked at the relationships between each of the predictors and the outcome variable through boxplots and bar graphs. From looking at the relationships, we narrowed one of our recipes to 11 predictors. We plan to test if this improves model performance.</p></li>
-<li><p>Next, we looked at the distribution of the numeric predictors. We found that 5 of the numeric predictors needed either a log or square root transformation to fix their skewed distribution and created a recipe with these transformations.</p>
-<ul>
-<li>The variable <code>up_counter</code> was heavily right skewed, and none of the transformations were fixing it. So, we decided to remove <code>up_counter</code> from this recipe.</li>
-</ul></li>
 <li><p>All of the feature engineering was done on a portion of the training set.</p></li>
 </ul>
 </section>
@@ -77,20 +73,35 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="recipe-building">Recipe Building</h2>
 <section id="kitchen-sink" class="level3">
 <h3 class="anchored" data-anchor-id="kitchen-sink">Kitchen Sink</h3>
+<p>The kitchen sink recipe uses all of the variables in the dataset as predictors with <code>is_exchangeable</code> as the outcome variable. It will be used as a baseline to see if variable selection improves model performance.</p>
+<p>I first had to use <code>step_other()</code> for <code>model_name</code> to deal with the large number of levels the variable had. Then, I dummy encoded all nominal predictors. After, I removed the variables with zero variance and centered and scaled all variables. Lastly, I used <code>step_impute_knn()</code> to impute missingess and <code>step_corr()</code> to remove variables that have large correlations with other ones.</p>
+<p>There is a full kitchen sink recipe and a shortened kitchen sink recipe. The full kitchen sink recipe is performed on the training set of 26971 variables while the shortened kitchen sink recipe is performed on a portion of the training set of 4045 variables.</p>
 </section>
-<section id="rec_rel" class="level3">
-<h3 class="anchored" data-anchor-id="rec_rel">Rec_Rel</h3>
+<section id="relationship-recipe" class="level3">
+<h3 class="anchored" data-anchor-id="relationship-recipe">Relationship Recipe</h3>
+<p>The relationship recipe uses the variables <code>odometer_value</code>, <code>year_produced</code>, <code>engine_capacity</code>, <code>price_usd</code>, <code>number_of_photos</code>, <code>engine_has_gas</code>, <code>has_warranty</code>, <code>state</code>, <code>drivetrain</code>, <code>location_region</code>, and <code>manufacturer_name</code>. These 11 variables showed possible relationships with the outcome variable <code>is_exchangeable</code>.</p>
+<p>I first dummy encoded all nominal predictors. After, I removed the variables with zero variance and centered and scaled all variables. Lastly, I used <code>step_impute_knn()</code> to impute missingess and <code>step_corr()</code> to remove variables that have large correlations with other ones.</p>
+<p>Similar to the kitchen sink model, there is a full relationship recipe and a shortened relationship recipe. The full relationship recipe is performed on the training set of 26971 variables while the shortened relationship recipe is performed on a portion of the training set of 4045 variables.</p>
+</section>
+<section id="importance-recipe" class="level3">
+<h3 class="anchored" data-anchor-id="importance-recipe">Importance Recipe</h3>
+<p>The importance recipe includes variables that had nonzero importance using random forest variable selection. After tuning the random forest model with the kitchen sink model, we looked at each variable’s importance.</p>
+<p>I first dummy encoded all nominal predictors. After, I removed the variables with zero variance and centered and scaled all variables. Lastly, I used <code>step_impute_knn()</code> to impute missingess and <code>step_corr()</code> to remove variables that have large correlations with other ones.</p>
+<p>We will not use the importance recipe for all of the models but will run the winning model with it to see if the importance recipe does better.</p>
 </section>
 </section>
 <section id="models-chosen-parameters" class="level2">
 <h2 class="anchored" data-anchor-id="models-chosen-parameters">Models Chosen + Parameters</h2>
+<p>We will use <code>roc_auc</code> as our performance metric for model performance. Once we have picked our final model and fitted it to our testing set, we will look at<code>roc_auc</code>, <code>accuracy</code>, and visualize a confusion matrix as well.</p>
+<p>The models we will be fitting are: - <strong>Null Model</strong> (to use as a baseline): A simple, non-informative model - Doesn’t have any main arguments - <strong>Random Forest Model:</strong> A model that creates a large number of decision trees, each independent of the others. It involves stratifying the predictor space into a number of simple regions. The predictions typically use the mean or mode response value in the region it belongs. - Tuning parameters: - <code>min_n</code>: The number of predictors that will be randomly sampled at each split when creating the tree models - <code>mtry</code>: The number of predictors that will be randomly sampled at each split when creating the tree models - Set an upper bound of 17 (max number of predictors a recipe would have) - <strong>Boosted Tree Model:</strong> A model that creates a series of decision trees forming an ensemble. Each tree depends on the results of previous trees. All trees in the ensemble are combined to produce a final prediction. - Tuning parameters: -<code>min_n</code>: The minimum number of data points in a node that is required for the node to be split further - <code>mtry</code>: The number (or proportion) of predictors that will be randomly sampled at each split when creating the tree models - Set an upper bound of 17 (max number of predictors a recipe would have) - <code>learn_rate</code>: The rate at which the boosting algorithm adapts from iteration-to-iteration - <strong>K Nearest Neighbors Model:</strong> A model that uses the <em>K</em> most similar data points from the training set to predict new samples - Tuning parameters: - <code>neighbors</code>: The number of neighbors to consider - <strong>Elastic Net Model:</strong> A model that uses linear predictors to predict multiclass data using the multinomial distribution - Tuning parameters: - <code>penalty</code>: A non-negative number representing the total amount of regularization - <code>mixture</code>: A number between zero and one (inclusive) giving the proportion of L1 regularization - Elastic net model interpolates lasso and ridge with 0 &lt; <code>mixture</code> &lt; 1 - <strong>Logistic Regression Model:</strong> This model uses a linear combination of the predictors to calculate or predict the probability of an event occurring. - Tuning parameters: - <code>penalty</code>: A non-negative number representing the total amount of regularization - <code>mixture</code>: A number between zero and one (inclusive) giving the proportion of L1 regularization - <code>mixture</code> = 1: pure lasso model - <code>mixture</code> = 0: ridge regression model - <strong>SVM Poly Model:</strong> The model tries to maximize the width of the margin between classes using a nonlinear class boundary. - Tuning parameters: - <code>cost</code>: A positive number for the cost of predicting a sample within or on the wrong side of the margin - <code>degree</code>: A positive number for polynomial degree - <code>scale_factor</code>: A positive number for the polynomial scaling factor - <strong>SVM Radial Model:</strong> The model tries to maximize the width of the margin between classes using a polynomial class boundary. - Tuning paramters: - <code>cost</code>: A positive number for the cost of predicting a sample within or on the wrong side of the margin - <code>rbf_sigma</code>: A positive number for radial basis function</p>
 </section>
 <section id="assessment-measures" class="level2">
 <h2 class="anchored" data-anchor-id="assessment-measures">Assessment Measures</h2>
-<p>The assessment measures we chose to test model performance are accuracy, and f_meas.</p>
+<p>The assessment measures we chose to test model performance are accuracy, roc_auc, and a confusion matrix.</p>
 <ul>
-<li><p>accuracy: accuracy measures the proportion of correctly classified predictions over the total number of predictions</p></li>
-<li><p>f_meas: the f-measure is used to measure the accuracy of a model by using precision and recall to determine how balanced the model’s performance is. It calculates the harmonic mean between precision and recall to produce a single metric.</p></li>
+<li><p>Accuracy: accuracy measures the proportion of correctly classified predictions over the total number of predictions</p></li>
+<li><p>ROC_AUC: a roc_auc curve measures the probability that any randomly identified positive prediction is ranked higher by the model than a randomly identified negative prediction. It produces an overall evaluation of the model’s performance</p></li>
+<li><p>Confusion Matrix: a confusion matrix is used to create a table that summarizes the predictions made in a classification model. It identifies the number of true positives, true negatives, false positives, and false negatives.</p></li>
 </ul>
 </section>
 <section id="model-performance" class="level2">
