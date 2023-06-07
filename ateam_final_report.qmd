@@ -56,10 +56,6 @@ In this exploration, we'd like to examine ways to predict if the used cars will 
 ## Data Splitting and Resampling Plan
 
 ```{r}
-library(tidyverse)
-library(tidymodels)
-
-cars <- read_rds(file = "data/processed/cars_clean.rds")
 ggplot(cars_train, mapping = aes(x = is_exchangeable, fill = is_exchangeable)) +
   geom_bar() +
   theme_minimal()
@@ -195,7 +191,7 @@ We will use `roc_auc` as our performance metric for model performance. Once we h
 ## Model Performance
 Displayed below is a graph of model results.
 
-As said before, the long recipes have 10 folds and 5 repeats, and are performed on the training set of 26971. The short recipes have 5 folds and 3 repeats, and are performed on a portion of the training set of 4045 variables.
+As said before, the long recipes have 10 folds and 5 repeats, and are performed on the training set of 26971. The short recipes have 5 folds and 3 repeats, and are performed on a portion of the training set of 4045 variables. However, the short recipe for the random forest importance recipe has 5 folds and 3 repeats and is performed on the entire training set.
 
 We tuned a random forest model with the importance recipe, as the random forest model with the kitchen sink recipe had the lowest `roc_auc`. The random forest with the importance recipe performed slightly worse than the random forest with the kitchen sink recipe.
 ```{r}
@@ -233,56 +229,143 @@ All of the models have small confidence intervals, except the neural network wit
 ## Tuning Parameters
 We tuned at fit 9 models in our exploration. Aside from the null model, we added additional parameters to our other models to further improve their performance. Here are the parameters used and their outcomes:
 
-- **Null Model** (baseline):
-```{r}
+### Kitchen Sink Recipe
 
-```
- 
 - **Random Forest Model:**
 ```{r}
+load(file = "results/tuning_rf_ks.rda")
 
+autoplot(rf_tune_ks, metric = "roc_auc")
 ```
 
 - **Boosted Tree Model:**
 ```{r}
+load(file = "results/tuning_boost_ks.rda")
 
+autoplot(boost_tune_ks, metric = "roc_auc")
 ```
 
 - **K Nearest Neighbors Model:**
 ```{r}
+load(file = "results/tuning_knn_ks.rda")
 
+autoplot(knn_tune_ks, metric = "roc_auc")
 ```
         
 - **Elastic Net Model:**
 ```{r}
+load(file = "results/tuning_en_ks.rda")
 
+autoplot(en_tune_ks, metric = "roc_auc")
 ```
         
 - **Logistic Regression Model:**
 ```{r}
+load(file = "results/tuning_log_reg_ks.rda")
 
+autoplot(log_reg_tune_ks, metric = "roc_auc")
 ```
         
 - **MARS Model:**
 ```{r}
+load(file = "results/tuning_mars_ks.rda")
 
+autoplot(mars_tune_ks, metric = "roc_auc")
 ```
-
 
 - **Multilayer Perceptron Model:**
 ```{r}
+load(file = "results/tuning_nn_ks.rda")
 
+autoplot(nn_tune_ks, metric = "roc_auc")
 ```
-
 
 - **SVM Poly Model:**
 ```{r}
+load(file = "results/tuning_svm_poly_ks.rda")
 
+autoplot(svm_poly_tune_ks, metric = "roc_auc")
 ```
 
 - **SVM Radial Model:**
 ```{r}
+load(file = "results/tuning_svm_rad_ks.rda")
 
+autoplot(svm_rad_tune_ks, metric = "roc_auc")
+```
+
+### Relationship Recipe
+
+- **Random Forest Model:**
+```{r}
+load(file = "results/tuning_rf_rel.rda")
+
+autoplot(rf_tune_rel, metric = "roc_auc")
+```
+
+- **Boosted Tree Model:**
+```{r}
+load(file = "results/tuning_boost_rel.rda")
+
+autoplot(boost_tune_rel, metric = "roc_auc")
+```
+
+- **K Nearest Neighbors Model:**
+```{r}
+load(file = "results/tuning_knn_rel.rda")
+
+autoplot(knn_tune_rel, metric = "roc_auc")
+```
+        
+- **Elastic Net Model:**
+```{r}
+load(file = "results/tuning_en_rel.rda")
+
+autoplot(en_tune_rel, metric = "roc_auc")
+```
+        
+- **Logistic Regression Model:**
+```{r}
+load(file = "results/tuning_log_reg_rel.rda")
+
+autoplot(log_reg_tune_rel, metric = "roc_auc")
+```
+        
+- **MARS Model:**
+```{r}
+load(file = "results/tuning_mars_rel.rda")
+
+autoplot(mars_tune_rel, metric = "roc_auc")
+```
+
+- **Multilayer Perceptron Model:**
+```{r}
+load(file = "results/tuning_nn_rel.rda")
+
+autoplot(nn_tune_ks, metric = "roc_auc")
+```
+
+- **SVM Poly Model:**
+```{r}
+load(file = "results/tuning_svm_poly_rel.rda")
+
+autoplot(svm_poly_tune_ks, metric = "roc_auc")
+```
+
+- **SVM Radial Model:**
+```{r}
+load(file = "results/tuning_svm_rad_rel.rda")
+
+autoplot(svm_rad_tune_ks, metric = "roc_auc")
+```
+
+### Importance Recipe
+
+- **Random Forest Model:**
+```{r}
+load(file = "results/tuning_rf_imp.rda")
+
+autoplot(rf_tune_imp, metric = "roc_auc")
 ```
 
 ## Final Model Selection
