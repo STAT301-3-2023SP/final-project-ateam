@@ -128,7 +128,15 @@ We will use `roc_auc` as our performance metric for model performance. Once we h
 
 
 ## Model Performance
-Displayed
+Displayed below is a graph of model results.
+
+As said before, the long recipes have 10 folds and 5 repeats and are performed on the training set of 26971. The short recipes have 5 folds and 3 repeats and are performed on a portion of the training set of 4045 variables.
+
+```{r}
+load(file = "results/model_results")
+model_
+```
+
 
 ## Issues
 

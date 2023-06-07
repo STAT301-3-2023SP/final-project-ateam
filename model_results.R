@@ -67,13 +67,15 @@ model_results <- tibble(model = c("Null", "KNN: KS Recipe",
                                   "SVM Poly: KS Recipe", "SVM Poly: Relationship Recipe", 
                                   "SVM Radial: KS Recipe", "SVM Radial: Relationship Recipe", 
                                   "MARS: KS Recipe", "MARS: Relationship Recipe"),
+                        recipe_type = c("n/a", "long", "long", "long", "long", "short", "long", "long", "short",
+                                        "short", "long", "long", "short", "long", "short", "short", "short",
+                                        "short", "long", "long"),
                         roc_auc = c(null_results$mean, knn_ks$mean, knn_rel$mean,
                                     rf_ks$mean, rf_rel$mean, rf_imp$mean, bt_ks$mean, bt_rel$mean,
                                     nn_ks$mean, nn_rel$mean, en_ks$mean, en_rel$mean,
                                     log_reg_ks$mean, log_reg_rel$mean, svm_poly_ks$mean,
                                     svm_poly_rel$mean, svm_rad_ks$mean, svm_rad_rel$mean,
                                     mars_ks$mean, mars_rel$mean))
-
 
 # table of times
 
@@ -96,7 +98,7 @@ model_times <- bind_rows(null_tictoc, knn_tictoc_ks, knn_tictoc_rel, rf_tictoc_k
 
 # join tables
 result_table <- merge(model_results, model_times) %>% 
-  select(model, roc_auc, runtime)
+  select(model, roc_auc, recipe_type, runtime)
 
 save(result_table, file = "results/model_results")
 
@@ -127,80 +129,31 @@ result_ks_graph_short <- model_set_best_ks_short %>%
   ylim(0.66, 0.68) +
   theme(legend.position = "none")
 
-result_ks_graph_4 <- ggarrange(result_ks_graph_3, result_ks_graph_2)
-
-save(result_ks_graph_1, result_ks_graph_4, file = "results/result_graph_ks.rda")
-
 ## put all tune_grids together (rel recipe)
-model_set_rel_1 <- as_workflow_set(
-  "elastic_net_rel" = en_tune_rel,
-  "mars_rel" = mars_tune_rel)
-
-model_set_rel_2 <- as_workflow_set(
-  "svm_poly_rel" = svm_poly_tune_rel_short,
-  "svm_radial_rel" = svm_rad_tune_rel_short,
-  "nn_rel" = nn_tune_rel
-)
-
-model_set_rel_3 <- as_workflow_set(
-  "knn_rel" = knn_tune_rel,
+model_set_best_rel <- as_workflow_set(
   "boosted_tree_rel" = boost_tune_rel
 )
 
-model_set_rel_4 <- as_workflow_set(
-  "rf_rel" = rf_tune_rel
-)
-
-model_set_rel_5 <- as_workflow_set(
-  "log_reg_rel" = log_reg_tune_rel
-)
 
 ## plot just the best
-result_rel_graph_1 <- model_set_rel_1 %>% 
-  autoplot(metric = "roc_auc", select_best = TRUE) +
-  theme_minimal() +
-  geom_text(aes(y = mean - 0.03, label = wflow_id), angle = 90, hjust = 0.6) +
-  ylim(0.53, 0.72) +
-  theme(legend.position = "none")
-
-result_rel_graph_2 <- model_set_rel_2 %>% 
-  autoplot(metric = "roc_auc", select_best = TRUE) +
-  theme_minimal() +
-  geom_text(aes(y = mean - 0.02, label = wflow_id), angle = 90, hjust = 0.6) +
-  ylim(0.6, 0.65) +
-  theme(legend.position = "none")
-
-result_rel_graph_3 <- model_set_rel_3 %>% 
-  autoplot(metric = "roc_auc", select_best = TRUE) +
-  theme_minimal() +
-  geom_text(aes(y = mean - 0.02, label = wflow_id), angle = 90, hjust = 0.6) +
-  ylim(0.56, 0.66) +
-  theme(legend.position = "none")
-
-result_rel_graph_4 <- model_set_rel_4 %>% 
-  autoplot(metric = "roc_auc", select_best = TRUE) +
-  theme_minimal() +
-  geom_text(aes(y = mean - 0.02, label = wflow_id), angle = 90, hjust = 0.6) +
-  ylim(0.6, 0.65) +
-  theme(legend.position = "none")
-
-result_rel_graph_5 <- model_set_rel_5 %>% 
+result_rel_graph <- model_set_best_rel %>% 
   autoplot(metric = "roc_auc", select_best = TRUE) +
   theme_minimal() +
   geom_text(aes(y = mean - 0.01, label = wflow_id), angle = 90, hjust = 0.6) +
-  ylim(0.6, 0.65) +
+  ylim(.63, 0.66) +
   theme(legend.position = "none")
 
-save(result_rel_graph_1, result_rel_graph_2, result_rel_graph_3, result_rel_graph_4,
-     result_rel_graph_5, file = "results/result_graph_rel.rda")
-
-model_set_best_ks_long <- as_workflow_set(
-  "elastic_net_ks" = en_tune_ks,
-  "rand_forest_ks" = rf_tune_ks,
-  "boosted_tree_ks" = boost_tune_ks,
-  "mars_ks" = mars_tune_ks
+## put all tune_grids together (imp recipe)
+model_set_best_imp <- as_workflow_set(
+  "rf_imp" = rf_tune_imp
 )
 
-model_set_best_ks_short <- as_workflow_set(
-  "nn_ks" = nn_tune_ks
-)
+result_imp_graph <- model_set_best_imp %>% 
+  autoplot(metric = "roc_auc", select_best = TRUE) +
+  theme_minimal() +
+  geom_text(aes(y = mean - 0.005, label = wflow_id), angle = 90, hjust = 0.6) +
+  ylim(0.7, 0.72) +
+  theme(legend.position = "none") 
+
+save(result_ks_graph_long, result_ks_graph_short,
+     result_rel_graph, result_imp_graph, file = "results/result_graphs")
