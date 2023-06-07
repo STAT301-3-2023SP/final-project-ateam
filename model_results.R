@@ -67,7 +67,7 @@ model_results <- tibble(model = c("Null", "KNN: KS Recipe",
                                   "Random Forest: Relationship Recipe", "Random Forest: Importance Recipe",
                                   "Boosted Tree: KS Recipe", "Boosted Tree: Relationship Recipe", 
                                   "Neural Network: KS Recipe", "Neural Network: Relationship Recipe", 
-                                  "Elastic Net: KS Recipe", "Elastic Net: Relationhip Recipe", 
+                                  "Elastic Net: KS Recipe", "Elastic Net: Relationship recipe", 
                                   "Logistic Regression: KS Recipe", "Logistic Regression: Relationship Recipe", 
                                   "SVM Poly: KS Recipe", "SVM Poly: Relationship Recipe", 
                                   "SVM Radial: KS Recipe", "SVM Radial: Relationship Recipe", 
@@ -111,8 +111,8 @@ save(result_table, file = "results/model_results")
 model_set_best_ks_long <- as_workflow_set(
   "elastic_net_ks" = en_tune_ks,
   "rand_forest_ks" = rf_tune_ks,
-  "boosted_tree_ks" = boost_tune_ks,
-  "mars_ks" = mars_tune_ks
+  "mars_ks" = mars_tune_ks,
+  "boosted_tree_ks" = boost_tune_ks
 )
 
 model_set_best_ks_short <- as_workflow_set(
