@@ -277,5 +277,5 @@ null_vs_rf %>%
 ```
 Our final model did better than the null model when comparing their area under the ROC curve but not as well when comparing their accuracy. Our final model performed similar to the null model in terms of accuracy. Overall accuracy is based on one specific cutpoint, while ROC tries all of the cutpoint and plots the sensitivity and specificity. So when we compare the overall accuracy, we are comparing the accuracy based on some cutpoint. The overall accuracy varies from different cutpoints. Therefore, my final model's accuracy being worse than its area under the ROC curve may be due to choosing a cutpoint that yields a lower accuracy.
 
-Overall, the final model performed well but did not fit our purposes. We were looking to 
+Overall, the final model performed well but did not fit our purposes. We were looking to see what variables make a car exchangeable. However, our final model ended up being a kitchen sink model that used all of the variables as predictors. The recipes in which we used variable selection methods, the models did not perform as well. We think that we need more variables in the dataset to choose from, as right now there are only 20.
 
