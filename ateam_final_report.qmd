@@ -39,12 +39,66 @@ As we mentioned in our initial exploration, our data was relatively unbalanced. 
 
 ## Recipe Building
 ### Kitchen Sink
+The kitchen sink recipe uses all of the variables in the dataset as predictors with `is_exchangeable` as the outcome variable. It will be used as a baseline to see if variable selection improves model performance. 
 
-### Rec_Rel
+I first had to use `step_other()` for `model_name` to deal with the large number of levels the variable had. Then, I dummy encoded all nominal predictors. After, I removed the variables with zero variance and centered and scaled all variables. Lastly, I used `step_impute_knn()` to impute missingess and `step_corr()` to remove variables that have large correlations with other ones.
 
+There is a full kitchen sink recipe and a shortened kitchen sink recipe. The full kitchen sink recipe is performed on the training set of 26971 variables while the shortened kitchen sink recipe is performed on a portion of the training set of 4045 variables.
+
+### Relationship Recipe
+The relationship recipe uses the variables `odometer_value`, `year_produced`, `engine_capacity`, `price_usd`, `number_of_photos`, `engine_has_gas`, `has_warranty`, `state`, `drivetrain`, `location_region`, and `manufacturer_name`. These 11 variables showed possible relationships with the outcome variable `is_exchangeable`.
+
+I first dummy encoded all nominal predictors. After, I removed the variables with zero variance and centered and scaled all variables. Lastly, I used `step_impute_knn()` to impute missingess and `step_corr()` to remove variables that have large correlations with other ones.
+
+Similar to the kitchen sink model, there is a full relationship recipe and a shortened relationship recipe. The full relationship recipe is performed on the training set of 26971 variables while the shortened relationship recipe is performed on a portion of the training set of 4045 variables.
+
+### Importance Recipe
+The importance recipe includes variables that had nonzero importance using random forest variable selection. After tuning the random forest model with the kitchen sink model, we looked at each variable's importance.
+
+I first dummy encoded all nominal predictors. After, I removed the variables with zero variance and centered and scaled all variables. Lastly, I used `step_impute_knn()` to impute missingess and `step_corr()` to remove variables that have large correlations with other ones.
+
+We will not use the importance recipe for all of the models but will run the winning model with it to see if the importance recipe does better.
 
 ## Models Chosen + Parameters
+We will use `roc_auc` as our performance metric for model performance. Once we have picked our final model and fitted it to our testing set, we will look at`roc_auc`, `accuracy`, and visualize a confusion matrix as well.
 
+The models we will be fitting are:
+- **Null Model** (to use as a baseline): A simple, non-informative model
+  - Doesn't have any main arguments
+- **Random Forest Model:** A model that creates a large number of decision trees, each independent of the others. It involves stratifying the predictor space into a number of simple regions. The predictions typically use the mean or mode response value in the region it belongs.
+  - Tuning parameters:
+    - `min_n`: The number of predictors that will be randomly sampled at each split when creating the tree models
+    - `mtry`: The number of predictors that will be randomly sampled at each split when creating the tree models
+      - Set an upper bound of 17 (max number of predictors a recipe would have)
+- **Boosted Tree Model:** A model that creates a series of decision trees forming an ensemble. Each tree depends on the results of previous trees. All trees in the ensemble are combined to produce a final prediction.
+  - Tuning parameters: 
+    -`min_n`: The minimum number of data points in a node that is required for the node to be split further
+    - `mtry`: The number (or proportion) of predictors that will be randomly sampled at each split when creating the tree models
+      - Set an upper bound of 17 (max number of predictors a recipe would have)
+    - `learn_rate`: The rate at which the boosting algorithm adapts from iteration-to-iteration
+- **K Nearest Neighbors Model:** A model that uses the *K* most similar data points from the training set to predict new samples
+  - Tuning parameters: 
+    - `neighbors`: The number of neighbors to consider
+- **Elastic Net Model:** A model that uses linear predictors to predict multiclass data using the multinomial distribution
+  - Tuning parameters: 
+    - `penalty`: A non-negative number representing the total amount of regularization
+    - `mixture`: A number between zero and one (inclusive) giving the proportion of L1 regularization
+      - Elastic net model interpolates lasso and ridge with 0 < `mixture` < 1
+- **Logistic Regression Model:** This model uses a linear combination of the predictors to calculate or predict the probability of an event occurring.
+  - Tuning parameters: 
+    - `penalty`: A non-negative number representing the total amount of regularization
+    - `mixture`: A number between zero and one (inclusive) giving the proportion of L1 regularization
+      - `mixture` = 1: pure lasso model
+      - `mixture` = 0: ridge regression model
+- **SVM Poly Model:** The model tries to maximize the width of the margin between classes using a nonlinear class boundary.
+  - Tuning parameters:
+    - `cost`: A positive number for the cost of predicting a sample within or on the wrong side of the margin
+    - `degree`: A positive number for polynomial degree
+    - `scale_factor`: A positive number for the polynomial scaling factor
+- **SVM Radial Model:** The model tries to maximize the width of the margin between classes using a polynomial class boundary.
+  - Tuning paramters:
+    - `cost`: A positive number for the cost of predicting a sample within or on the wrong side of the margin
+    - `rbf_sigma`: A positive number for radial basis function
 
 ## Assessment Measures
 The assessment measures we chose to test model performance are accuracy, roc_auc, and a confusion matrix. 
