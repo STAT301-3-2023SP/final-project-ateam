@@ -1,7 +1,7 @@
 ---
 title: "Final Report"
 subtitle: "Data Science 3 with R (STAT 301-3)"
-author: "ateam: Allie Tong, Alani Cox-Caceres"
+author: "ateam: Allie Tong & Alani Cox-Caceres"
 
 
 format:
