@@ -28,14 +28,42 @@ Our [dataset](https://www.kaggle.com/datasets/lepchenkov/usedcarscatalog) consis
 In this exploration, we'd like to examine ways to predict if the used cars will be exchangeable based on the variables that affect that outcome the most. This is a categorical prediction problem. We want to explore what factors make a car exchangeable and will test the predictor importance of various predictors to do so.
 
 ## Data Splitting and Resampling Plan
-As we mentioned in our initial exploration, our data was relatively unbalanced. To remedy this, we stratified our target variable, `is_exchangeable`, and used a 70/30 split for our training and testing data. For resampling, we used a cross-validation method. For the models that have shorter runtime, we will use 10 folds with 5 repeats. For the models that have longer runtime, we will use 5 folds and 3 repeats.
+
+```{r}
+library(tidyverse)
+library(tidymodels)
+
+cars <- read_rds(file = "data/processed/cars_clean.rds")
+ggplot(cars_train, mapping = aes(x = is_exchangeable)) +
+  geom_bar()
+```
+As seen above, our data was relatively unbalanced. To remedy this, we stratified our target variable, `is_exchangeable`, and used a 70/30 split for our training and testing data. For resampling, we used a cross-validation method. For the models that have shorter runtime, we will use 10 folds with 5 repeats. For the models that have longer runtime, we will use 5 folds and 3 repeats.
 
 ## Feature Engineering
-- We first ensured that there weren't any significant missing issues that could not be imputed and found no significant missingness.
+```{r}
+library(naniar)
+miss_var_summary(cars)
+```
 
-- We looked at the relationships between each of the predictors and the outcome variable through boxplots and bar graphs. From looking at the relationships, we narrowed one of our recipes to 11 predictors. We plan to test if this improves model performance.
+As seen above, there are no significant missing issues that could not be imputed and found no significant missingness.
 
-- All of the feature engineering was done on a portion of the training set.
+```{r}
+load(file = "results/num_rel")
+gridExtra::grid.arrange(grobs = box_plots_num)
+```
+
+```{r}
+load(file = "results/nom_rel")
+
+nom_rel_1
+
+nom_rel_2
+
+nom_rel_3
+```
+Using the graphs above, we looked at the relationships between each of the predictors and the outcome variable. From looking at the relationships, we narrowed our relationship recipe to the predictors that displayed a relationship with the outcome variable. We plan to test if this improves model performance.
+
+All of the feature engineering was done on a portion of the training set.
 
 ## Recipe Building
 ### Kitchen Sink
@@ -163,7 +191,7 @@ result_rel_graph
 result_imp_graph
 ```
 
-All of the models have small confidence intervals, except the neural network with the kitchen sink recipe and the random forest with the importance recipe.
+All of the models have small confidence intervals, except the neural network with the shortened kitchen sink recipe and the random forest with the importance recipe.
 
 ## Tuning Parameters
 
@@ -176,5 +204,78 @@ We expected the svm models to do better than they did. We believe that the reaso
 The final model we will use is the random forest with the kitchen sink recipe. We are not surprised, as random forest models typically perform well. However, we are surprised that the kitchen sink recipe performed better than the importance recipe. Again, it is likely due to the number folds and repeats used for each recipe and model.
 
 ## Final Model Analysis
+Now that we have chosen our final model, we will finalize our final model workflow and fit it to the testing data.
 
+The table below shows the observations of `is_exchangeable` in the testing data and compares it to what the final model predicted its `is_exchangeable` value would be. Class probabilities are an estimation of the probability that an observation belongs to each class for `is_exchangeable` (`TRUE` or `FALSE`) in a set of classes (`TRUE` and `FALSE`). So, `.pred_TRUE = 0.51` and `.pred_FALSE = 0.49` would imply that my model had trouble classifying the car, whereas `.pred_TRUE = 0.95` and `.pred_FALSE = 0.05` would imply that my model confidently classified a car as being exchangeable.
+
+```{r}
+load(file = "results/final_result")
+final_result %>% 
+  rename(prediction = .pred_class) %>% 
+  kbl() %>% 
+  kable_styling()
+```
+
+### ROC Curve
+The ROC curve shows the trade-off between sensitivity (or true positive rate) and specificity (1 – true positive rate). In this case, the true positive observation would be `is_exchangeable = FALSE`. The true positive rate is the proportion of observations that were correctly predicted to be positive out of all positive observations. 
+
+The closer to the top left corner the curve is, the better the model performed. As a baseline, a null model is expected to give points lying along the dotted diagonal line. So, it seems that my model did significantly better than the null model.
+
+```{r}
+final_result %>% 
+  roc_curve(is_exchangeable, .pred_FALSE) %>% 
+  autoplot()
+```
+
+### Area Under ROC Curve
+The area under the ROC curve of my final model is the probability that the model correctly classifies a car that is exchangeable from a car that isn't. It provides an aggregate measure of performance across all possible classification thresholds. A value of `0.715` means that our random forest model with the kitchen sink recipe did pretty well in correctly classifying the cars in the testing set, though there is still some room for error. It performed similarly on the testing set as it did in the training set.
+
+```{r}
+set.seed(1234)
+
+final_result %>% 
+  roc_auc(is_exchangeable, .pred_FALSE) %>% 
+  kbl() %>% 
+  kable_styling()
+```
+
+### Accuracy
+Our final model was able to accurately predict 70% of the observations in my testing set. This means that my model was able to correctly predict whether a car was exchangeable or not for 8111 out of the 11560 cars in the testing set.
+
+```{r}
+set.seed(1234)
+
+accuracy(final_result, is_exchangeable, .pred_class) %>% 
+  kbl() %>% 
+  kable_styling()
+```
+
+### Conference Matrix
+The confusion matrix shows how accurate our final model predictions are. So, in the `(Prediction FALSE, Truth FALSE)` category, these are the amount of observations that we correctly predicted were `FALSE`. In the `(Prediction FALSE, Truth TRUE)` category, these are the amount of observations that we incorrectly predicted were `FALSE`. In the `(Prediction TRUE, Truth FALSE)`, these are the amount of observations that Iwe incorrectly predicted were `TRUE`. In the `(Prediction TRUE, Truth TRUE)`, these are the amount of observations that we correctly predicted were `TRUE`. Essentially, it is a visual representation of the performance metric accuracy.
+
+I see that my final model did better at predicting the cars that were not exchangable than predicting cars that were. It correctly classified 90.61% of the cars that were not exchangeable and only 67.35% of the cars that were exchangeable. This issue can be partially attributed to the imbalance of `is_exchangeable`, as there were around 2x more `FALSE` observations than `TRUE`.
+
+```{r}
+conf_mat(final_result, is_exchangeable, .pred_class)
+```
+
+### Comparing Final Model to Null Model
+
+```{r}
+load(file = "results/tuned_null.rda")
+best_null_auc <- show_best(null_fit, metric = "roc_auc")[1,]
+best_null_accuracy <- show_best(null_fit, metric = "accuracy")[1,]
+
+null_vs_rf <- tibble(model = c("Null", "Null", "RF", "RF"),
+       metric = c("ROC", "Accuracy", "ROC", "Accuracy"),
+       mean = c(best_null_auc$mean, best_null_accuracy$mean, 
+                "0.7151476", "0.7017301"))
+
+null_vs_rf %>% 
+  kbl() %>% 
+  kable_styling()
+```
+Our final model did better than the null model when comparing their area under the ROC curve but not as well when comparing their accuracy. Our final model performed similar to the null model in terms of accuracy. Overall accuracy is based on one specific cutpoint, while ROC tries all of the cutpoint and plots the sensitivity and specificity. So when we compare the overall accuracy, we are comparing the accuracy based on some cutpoint. The overall accuracy varies from different cutpoints. Therefore, my final model's accuracy being worse than its area under the ROC curve may be due to choosing a cutpoint that yields a lower accuracy.
+
+Overall, the final model performed well but did not fit our purposes. We were looking to 
 

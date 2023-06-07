@@ -4,6 +4,11 @@ library(tidyverse)
 
 tidymodels_prefer()
 
+set.seed(1234)
+
+# load in training and testing
+load("results/rec_ks_setup.rda")
+
 # load in results
 load(file = "results/tuned_null.rda")
 load(file = "results/tuning_knn_rel.rda")
@@ -157,3 +162,19 @@ result_imp_graph <- model_set_best_imp %>%
 
 save(result_ks_graph_long, result_ks_graph_short,
      result_rel_graph, result_imp_graph, file = "results/result_graphs")
+
+
+# fit final model
+load(file = "results/rf_workflow_ks")
+
+final_workflow <- rf_workflow_ks %>% 
+  finalize_workflow(select_best(rf_tune_ks, metric = "roc_auc"))
+
+final_fit <- fit(final_workflow, cars_train)
+
+final_result <- cars_test %>% 
+  select(is_exchangeable) %>%
+  bind_cols(predict(final_fit, cars_test, type = "class")) %>% 
+  bind_cols(predict(final_fit, cars_test, type = "prob"))
+
+save(final_result, file = "results/final_result")

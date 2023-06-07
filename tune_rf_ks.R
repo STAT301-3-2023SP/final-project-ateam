@@ -33,6 +33,8 @@ rf_workflow_ks <- workflow() %>%
   add_model(rf_mod) %>% 
   add_recipe(rec_ks)
 
+save(rf_workflow_ks, file = "results/rf_workflow_ks")
+
 # tuning/fitting ----
 tic.clearlog()
 tic("Random Forest: KS Recipe")

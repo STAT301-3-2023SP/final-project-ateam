@@ -2,6 +2,7 @@
 library(tidyverse)
 library(tidymodels)
 library(naniar)
+library(ggpubr)
 
 # set seed ----
 set.seed(1234)
@@ -31,40 +32,47 @@ box_plots_num <- map(colnames(cars_train_2)
                      geom_boxplot() + 
                      xlab(x)
                  })
+save(box_plots_num, file = "results/num_rel")
 
 gridExtra::grid.arrange(grobs = box_plots_num)
 # weak relationships overall but very weak relationship with up_counter and duration_listed
 
 # Explore relationships with nominal variables ----
-ggplot(cars_train_2, mapping = aes(x = engine_has_gas)) +
+engine_gas <- ggplot(cars_train_2, mapping = aes(x = engine_has_gas)) +
   geom_bar(aes(fill = is_exchangeable), position = "dodge") # seems to have relationship
 
-ggplot(cars_train_2, mapping = aes(x = engine_type)) +
+engine_type <- ggplot(cars_train_2, mapping = aes(x = engine_type)) +
   geom_bar(aes(fill = is_exchangeable), position = "dodge") # weak relationship
 
-ggplot(cars_train_2, mapping = aes(x = has_warranty)) +
+warranty <- ggplot(cars_train_2, mapping = aes(x = has_warranty)) +
   geom_bar(aes(fill = is_exchangeable), position = "dodge") # seems to have relationship
 
-ggplot(cars_train_2, mapping = aes(x = state)) +
+state <- ggplot(cars_train_2, mapping = aes(x = state)) +
   geom_bar(aes(fill = is_exchangeable), position = "dodge") # seems to have relationship
 
-ggplot(cars_train_2, mapping = aes(x = drivetrain)) +
+drivetrain <- ggplot(cars_train_2, mapping = aes(x = drivetrain)) +
   geom_bar(aes(fill = is_exchangeable), position = "dodge") # seems to have relationship
 
-ggplot(cars_train_2, mapping = aes(x = manufacturer_name)) +
+manufacturer <- ggplot(cars_train_2, mapping = aes(x = manufacturer_name)) +
   geom_bar(aes(fill = is_exchangeable), position = "dodge") # possible relationship
 
-ggplot(cars_train_2, mapping = aes(x = model_name)) +
+model <- ggplot(cars_train_2, mapping = aes(x = model_name)) +
   geom_bar(aes(fill = is_exchangeable), position = "dodge") # too many characters
 
-ggplot(cars_train_2, mapping = aes(x = color)) +
+color <- ggplot(cars_train_2, mapping = aes(x = color)) +
   geom_bar(aes(fill = is_exchangeable), position = "dodge") # weak relationship
 
-ggplot(cars_train_2, mapping = aes(x = body_type)) +
+body <- ggplot(cars_train_2, mapping = aes(x = body_type)) +
   geom_bar(aes(fill = is_exchangeable), position = "dodge") # weak relationship
 
-ggplot(cars_train_2, mapping = aes(x = location_region)) +
+location <- ggplot(cars_train_2, mapping = aes(x = location_region)) +
   geom_bar(aes(fill = is_exchangeable), position = "dodge") # seems to have relationship
+
+nom_rel_1 <- ggarrange(engine_gas, engine_type, warranty, state, drivetrain)
+nom_rel_2 <- ggarrange(manufacturer, model)
+nom_rel_3 <- ggarrange(color, body, location)
+
+save(nom_rel_1, nom_rel_2, nom_rel_3, file = "results/nom_rel")
 
 # Distribution of numerical predictors ----
 # right skewed - fixed with square root
