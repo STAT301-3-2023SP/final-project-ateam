@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.245">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>ateam_final_report</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="ateam_final_report_files/libs/clipboard/clipboard.min.js"></script>
+<script src="ateam_final_report_files/libs/quarto-html/quarto.js"></script>
+<script src="ateam_final_report_files/libs/quarto-html/popper.min.js"></script>
+<script src="ateam_final_report_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="ateam_final_report_files/libs/quarto-html/anchor.min.js"></script>
+<link href="ateam_final_report_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="ateam_final_report_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="ateam_final_report_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="ateam_final_report_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="ateam_final_report_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+<section id="github-repository" class="level2">
+<h2 class="anchored" data-anchor-id="github-repository">Github Repository</h2>
+<p><a href="https://github.com/STAT301-3-2023SP/final-project-ateam">https://github.com/STAT301-3-2023SP/final-project-ateam</a></p>
+</section>
+<section id="data-overview" class="level2">
+<h2 class="anchored" data-anchor-id="data-overview">Data Overview</h2>
+<p>Our <a href="https://www.kaggle.com/datasets/lepchenkov/usedcarscatalog">dataset</a> consists of variables that describe cars in the used car market in Belarus on December 2, 2019. There are 38531 observations. Our target variable will be <code>is_exchangeable</code>, which is a factor variable that indicates <code>TRUE</code> if the used car can be exchanged with another car and <code>FALSE</code> if the used car cannot be exchanged with another car. There are 19 predictors, of which 1 is an integer, 5 are characters, 7 are numeric, and 6 are factors.</p>
+</section>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">Goal</h2>
+<p>In this exploration, we’d like to examine ways to predict if the used cars will be exchangeable based on the variables that affect that outcome the most. This is a categorical prediction problem. We want to explore what factors make a car exchangeable and will test the predictor importance of various predictors to do so.</p>
+</section>
+<section id="data-splitting-and-resampling-plan" class="level2">
+<h2 class="anchored" data-anchor-id="data-splitting-and-resampling-plan">Data Splitting and Resampling Plan</h2>
+<p>As we mentioned in our initial exploration, our data was relatively unbalanced. To remedy this, we stratified our target variable, <code>is_exchangeable</code>, and used a 70/30 split for our training and testing data. For resampling, we used a cross-validation method. We will have 10 folds with 5 repeats.</p>
+</section>
+<section id="feature-engineering" class="level2">
+<h2 class="anchored" data-anchor-id="feature-engineering">Feature Engineering</h2>
+<ul>
+<li><p>We first ensured that there weren’t any significant missing issues that could not be imputed and found no significant missingness.</p></li>
+<li><p>We looked at the relationships between each of the predictors and the outcome variable through boxplots and bar graphs. From looking at the relationships, we narrowed one of our recipes to 11 predictors. We plan to test if this improves model performance.</p></li>
+<li><p>Next, we looked at the distribution of the numeric predictors. We found that 5 of the numeric predictors needed either a log or square root transformation to fix their skewed distribution and created a recipe with these transformations.</p>
+<ul>
+<li>The variable <code>up_counter</code> was heavily right skewed, and none of the transformations were fixing it. So, we decided to remove <code>up_counter</code> from this recipe.</li>
+</ul></li>
+<li><p>All of the feature engineering was done on a portion of the training set.</p></li>
+</ul>
+</section>
+<section id="recipe-building" class="level2">
+<h2 class="anchored" data-anchor-id="recipe-building">Recipe Building</h2>
+<section id="kitchen-sink" class="level3">
+<h3 class="anchored" data-anchor-id="kitchen-sink">Kitchen Sink</h3>
+</section>
+<section id="rec_rel" class="level3">
+<h3 class="anchored" data-anchor-id="rec_rel">Rec_Rel</h3>
+</section>
+</section>
+<section id="models-chosen-parameters" class="level2">
+<h2 class="anchored" data-anchor-id="models-chosen-parameters">Models Chosen + Parameters</h2>
+</section>
+<section id="assessment-measures" class="level2">
+<h2 class="anchored" data-anchor-id="assessment-measures">Assessment Measures</h2>
+<p>The assessment measures we chose to test model performance are accuracy, and f_meas.</p>
+<ul>
+<li><p>accuracy: accuracy measures the proportion of correctly classified predictions over the total number of predictions</p></li>
+<li><p>f_meas: the f-measure is used to measure the accuracy of a model by using precision and recall to determine how balanced the model’s performance is. It calculates the harmonic mean between precision and recall to produce a single metric.</p></li>
+</ul>
+</section>
+<section id="model-performance" class="level2">
+<h2 class="anchored" data-anchor-id="model-performance">Model Performance</h2>
+</section>
+<section id="issues" class="level2">
+<h2 class="anchored" data-anchor-id="issues">Issues</h2>
+</section>
+<section id="final-model-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="final-model-analysis">Final Model Analysis</h2>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
