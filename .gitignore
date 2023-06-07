@@ -46,3 +46,6 @@ results/tuning_nn_ks.rda
 results/tuning_boost_rel.rda
 results/tuning_boost_ks.rda
 .git/objects/pack/pack-cdf6666e661275c301256626e5bba4a2c2f04b0a.pack
+results/tuning_boost_rel.rda
+results/tuning_boost_ks.rda
+.git/objects/pack/pack-cdf6666e661275c301256626e5bba4a2c2f04b0a.pack
