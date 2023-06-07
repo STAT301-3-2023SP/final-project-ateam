@@ -2,7 +2,6 @@
 
 library(tidyverse)
 library(tidymodels)
-library(textrecipes)
 library(tictoc)
 
 tidymodels_prefer()
@@ -44,7 +43,7 @@ svm_radial_workflow_rel_short <- workflow() %>%
 
 # tuning/fitting ----
 tic.clearlog()
-tic("SVM Radial: Short REL Recipe")
+tic("SVM Radial: Relationship Recipe")
 
 
 svm_rad_tune_rel_short <- tune_grid(
@@ -53,9 +52,7 @@ svm_rad_tune_rel_short <- tune_grid(
   grid = svm_rad_grid,
   control = control_grid(save_pred = TRUE,
                          save_workflow = TRUE,
-                         parallel_over = "everything"),
-  metrics = metric_set(accuracy, f_meas)
-)
+                         parallel_over = "everything"))
 
 toc(log = TRUE)
 

@@ -1,7 +1,6 @@
 ##rec 2
 library(tidyverse)
 library(tidymodels)
-library(textrecipes)
 library(tictoc)
 
 tidymodels_prefer()
@@ -37,7 +36,7 @@ svm_poly_workflow_rel_short <- workflow() %>%
 
 # tuning/fitting ----
 tic.clearlog()
-tic("Polynomial SVM: Short REL Recipe")
+tic("Polynomial SVM: Relationship Recipe")
 
 
 svm_poly_tune_rel_short <- tune_grid(
@@ -46,9 +45,7 @@ svm_poly_tune_rel_short <- tune_grid(
   grid = svm_poly_grid,
   control = control_grid(save_pred = TRUE,
                          save_workflow = TRUE,
-                         parallel_over = "everything"),
-  metrics = metric_set(accuracy, f_meas),
-  parallel_over = "everything")
+                         parallel_over = "everything"))
 
 
 toc(log = TRUE)
