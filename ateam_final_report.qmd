@@ -240,7 +240,7 @@ load(file = "results/tuning_rf_ks.rda")
 
 autoplot(rf_tune_ks, metric = "roc_auc")
 ```
-For this model, it seems that it has the best roc_auc score when it has around 5 randomly selected predictors. When this occurs, the roc_auc score for this model is relatively high, but otherwise, it doesn't perform very well.
+For this model, it seems that it has the best roc_auc score when it has around 15 randomly selected predictors. When this occurs, the roc_auc score for this model is relatively high, but otherwise, it doesn't perform very well.
 
 - **Boosted Tree Model:**
 ```{r}
@@ -248,7 +248,7 @@ load(file = "results/tuning_boost_ks.rda")
 
 autoplot(boost_tune_ks, metric = "roc_auc")
 ```
-This model looks very similar to the random forest model, and produces the same advantages as that model. It is a bit shorter than the random forest, and the curve is not as concave, so its performance isn't as great relative to the random forest, but this model still performs relatively well.
+This model looks very similar to the random forest model, and produces the same advantages as that model. This model performs best with a higher number of predictors.
 
 - **K Nearest Neighbors Model:**
 ```{r}
@@ -256,9 +256,7 @@ load(file = "results/tuning_knn_ks.rda")
 
 autoplot(knn_tune_ks, metric = "roc_auc")
 ```
-The roc_auc curve for this model has a very high end point towards the top-right corner, which means it is less likely to falsely identify a negative case as positive, but the peak of the curve isn't very close to the top-left corner, which indicates that it has a relatively low proportion of actual positive cases that were correctly classified as positive.
-
-This model also has a high number of neighbors, which means it can take into account a larger number of data points from different classes, but this also means it may be more. robust and could lose information for some of the smaller details. 
+This model performs best with a higher number of neighbors. This also means when its performing its best, it can take into account a larger number of data points from different classes, but this also means it may be more robust and could lose information for some of the smaller details. 
     
 - **Elastic Net Model:**
 ```{r}
@@ -266,9 +264,7 @@ load(file = "results/tuning_en_ks.rda")
 
 autoplot(en_tune_ks, metric = "roc_auc")
 ```
-This model faces the opposite way of the previous model, which means it is highly proficient in correctly identifying positive cases, but the peak of the curve approaches the upper-right corner, which means this model is poor at avoiding false positive errors.
-
-However, this graph also tests the amount of regularization. Regularization is a method that is used to prevent overfitting. This model has high regularization, which means means the model is more restricted, which may help to prevent overfitting.
+This model has the best roc_auc score when it has lower levels of regularization. Regularization is a method that is used to prevent overfitting. At it's best, this model has low regularization, which means means the model is less restricted, which cause overfitting.
 
 - **Logistic Regression Model:**
 ```{r}
@@ -276,7 +272,7 @@ load(file = "results/tuning_log_reg_ks.rda")
 
 autoplot(log_reg_tune_ks, metric = "roc_auc")
 ```
-This graph looks very similar to the previous one. It indicates that this model has high proficiency in correctly identifying positive cases, poor proficiency in avoiding false positive errors, but is relatively good at avoiding overfitting. 
+This graph looks very similar to the previous one. It indicates that this model has high a higher roc_auc score with lower regularization, but is relatively bad at avoiding overfitting. 
 
 - **MARS Model:**
 ```{r}
@@ -284,7 +280,7 @@ load(file = "results/tuning_mars_ks.rda")
 
 autoplot(mars_tune_ks, metric = "roc_auc")
 ```
-This model has a high proficiency in correctly identifying positive cases, but performs relatively poorly when attempting to avoid false positive cases.
+This model has the best roc_auc score when it has 5 model terms. The model terms refer to the individual functions that make up the MARS model, so in this case, the more components the MARS model has, the better its roc_auc performance will be.
 
 - **Multilayer Perceptron Model:**
 ```{r}
@@ -292,11 +288,10 @@ load(file = "results/tuning_nn_ks.rda")
 
 autoplot(nn_tune_ks, metric = "roc_auc")
 ```
-This model contains a multitude of results, but the general shape of the curves indicates that this model has a high proportion of correctly identified positive cases, but is very poor at avoiding false positive errors. 
+This model contains a multitude of results, which means this model is a poor representation of a good roc_auc score. 
 
-It also has a high number of hidden units, which means it has a more complex model structure with more patterns and representations. 
+In general, it seems that the model performs better with a lower of hidden units, which means it has a less complex model structure with less patterns and representations. 
 
-Even so, the results are varied, so this model is a poor representation of a good roc_auc score. 
 
 - **SVM Poly Model:**
 ```{r}
@@ -368,7 +363,7 @@ load(file = "results/tuning_mars_rel.rda")
 
 autoplot(mars_tune_rel, metric = "roc_auc")
 ```
-For both degrees of interaction, this model has the highest roc_auc score with 5 model terms. The model terms refer to the individual functions that make up the MARS model, so in this case, the more components the MARS model has, the better its roc_auc performance will be.
+For both degrees of interaction, this model has the highest roc_auc score with 5 model terms. 
 
 - **Multilayer Perceptron Model:**
 ```{r}
@@ -402,7 +397,7 @@ load(file = "results/tuning_rf_imp.rda")
 
 autoplot(rf_tune_imp, metric = "roc_auc")
 ```
-After examining all of the different models, it seems that the random forest model had the best overall performance with the roc_auc score. This means it has the best balance between correctly identifying positive cases and avoiding false positive cases. When plotted using the importance recipe, the random forest model sstill performs very well in both of these areas, further affirming that this is model has the best overall performance.
+After examining all of the different models, it seems that the random forest model had the best overall performance with the roc_auc score. This means it has the best balance between correctly identifying positive cases and avoiding false positive cases. When plotted using the importance recipe, the random forest model still performs very well in both of these areas, further affirming that this is model has the best overall performance.
 
 ## Final Model Selection
 Overall, the tree methods seemed to perform the best on this dataset with the random forest and boosted tree models producing the best results. Also, the kitchen sink recipe did better than the relationship recipe, implying that the benefits of more predictors used outweighed the benefits of only using the predictors that displayed relationships with the outcome variable. The importance recipe combined the two, by using more predictors than the relationship recipe and only using variables with predictive importance. However, in the end, the kitchen sink recipe did slightly better than the importance recipe with the random forest model. We think that this may be due to the importance recipe using fewer folds and repeats to shorten the runtime.
