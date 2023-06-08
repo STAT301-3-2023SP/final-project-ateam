@@ -8,14 +8,15 @@ format:
   html:
     toc: true
     embed-resources: true
-    code-fold: show
-    link-external-newwindow: true
+    code-fold: true
     echo: false
+    link-external-newwindow: true
     
 execute:
   warning: false
-
-from: markdown+emoji 
+  message: false
+  
+from: markdown+emoji
 ---
 
 ## Github Repository
