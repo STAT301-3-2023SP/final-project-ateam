@@ -1,5 +1,5 @@
 ---
-title: "Final Report"
+title: "What makes a car exchangeable?"
 subtitle: "Data Science 3 with R (STAT 301-3)"
 author: "ateam: Allie Tong & Alani Cox-Caceres"
 
@@ -229,8 +229,14 @@ result_imp_graph
 All of the models have small confidence intervals, except the neural network with the shortened kitchen sink recipe and the random forest with the importance recipe.
 
 ## Tuning Parameters
+<<<<<<< HEAD
+We tuned at fit 9 models in our exploration. Aside from the null model, we added additional parameters to our other models to further improve their performance. Each of these graphs shows the roc_auc curve for each model in both the kitchen sink nd relationship recipes. 
+
+As mentioned in the Assessment Measures section, the roc_auc curve provides a visual representation of the relationship between the true positive rate (sensitivity) and the false positive rate (1-specificity).
+=======
 We tuned at fit 9 models in our exploration. Aside from the null model, we added additional parameters to our other models to further improve their performance. Each of these graphs shows specific parameters for each model compared to the roc_auc metric to determine when the models perform best.
 - As mentioned in the Assessment Measures section, the roc_auc curve provides a visual representation of the relationship between the true positive rate (sensitivity) and the false positive rate (1-specificity). 
+>>>>>>> 72850496f28667b0921006dcf6c5c038bb48000b
 
 Here are the graphs for each model:
 
@@ -242,7 +248,11 @@ load(file = "results/tuning_rf_ks.rda")
 
 autoplot(rf_tune_ks, metric = "roc_auc")
 ```
+<<<<<<< HEAD
+In this model, the peak of the curve moves towards the top-left corner, which indicates that this model has a relatively low rate of falsely identifying negative cases as positive. Also, the peak of the curve is approaching the upper-left corner, which means this model has a higher proportion of actual positive cases that were correctly classified as positive. These results show that this model is proficient in its predictions and performs well. 
+=======
 For this model, it seems that it has the best roc_auc score when it has around 15 randomly selected predictors. When this occurs, the roc_auc score for this model is relatively high, but otherwise, it doesn't perform very well.
+>>>>>>> 72850496f28667b0921006dcf6c5c038bb48000b
 
 - **Boosted Tree Model:**
 ```{r}
@@ -399,14 +409,18 @@ load(file = "results/tuning_rf_imp.rda")
 
 autoplot(rf_tune_imp, metric = "roc_auc")
 ```
+<<<<<<< HEAD
+After examining all of the different models, it seems that the random forest model had the best overall performance with the roc_auc score. This means it has the best balance between correctly identifying positive cases and avoiding false positive cases. When plotted using the importance recipe, the random forest model still performs very well in both of these areas, further affirming that this is model has the best overall performance.
+=======
 When plotted using the importance recipe, the random forest model performs best with a larger number of predictors. 
+>>>>>>> 72850496f28667b0921006dcf6c5c038bb48000b
 
 ## Final Model Selection
 Overall, the tree methods seemed to perform the best on this dataset with the random forest and boosted tree models producing the best results. Also, the kitchen sink recipe did better than the relationship recipe, implying that the benefits of more predictors used outweighed the benefits of only using the predictors that displayed relationships with the outcome variable. The importance recipe combined the two, by using more predictors than the relationship recipe and only using variables with predictive importance. However, in the end, the kitchen sink recipe did slightly better than the importance recipe with the random forest model. We think that this may be due to the importance recipe using fewer folds and repeats to shorten the runtime.
 
 We expected the svm models to do better than they did. We believe that the reasoning behind the svm performing worse than expected is also due to the need to use fewer folds and repeats and to cut down the training set. When we originally ran the svm models, the models were running for over 48 hours. So, we decided to cut down the number of folds and repeats and the recipe to save runtime.
 
-The final model we will use is the random forest with the kitchen sink recipe. We are not surprised, as random forest models typically perform well. However, we are surprised that the kitchen sink recipe performed better than the importance recipe. Again, it is likely due to the number folds and repeats used for each recipe and model.
+The final model we will use is the random forest with the kitchen sink recipe. We are not surprised, as random forest models do well in managing outliers and in preventing overfitting. Also, as seen before, the random forest However, we are surprised that the kitchen sink recipe performed better than the importance recipe. Again, it is likely due to the number folds and repeats used for each recipe and model.
 
 ## Final Model Analysis
 Now that we have chosen our best model, we will complete our final model workflow and fit it to the testing data.
@@ -485,5 +499,7 @@ null_vs_rf %>%
 ```
 Our final model did better than the null model when comparing their area under the ROC curve, but not as well when comparing their accuracy. When comparing their accuracy, our final model performed similarly to the null model. Overall, accuracy is based on one specific cutpoint, while ROC tries all of the cutpoint and plots and the sensitivity and specificity. So when we compare the overall accuracy, we are comparing the accuracy based on a designated cutpoint. The overall accuracy varies from different cutpoints. Therefore, our final model's accuracy being worse than its area under the ROC curve may be due to choosing a cutpoint that yields a lower accuracy.
 
-In conclusion, the final model performed well but did not fit our purposes to determine what variables make a car exchangeable because our final model ended up being a kitchen sink model that used all of the variables as predictors. The recipes that used variable selection methods had relatively poor model performance when applied. To remedy this, ee think that we need more variables in the dataset to choose from, since right now there are only 20.
+Overall, our final model did significantly better than the null model. So, we think it is worth the effort of building a predictive model. However, the runtime is very long, so we would need find ways to shorten the runtime. In shortening the runtime
 
+## Conclusion
+In conclusion, the final model performed well but did not fit our purposes to determine what variables make a car exchangeable because our final model ended up being a kitchen sink model that used all of the variables as predictors. The recipes that used variable selection methods had relatively poor model performance when applied. To remedy this, ee think that we need more variables in the dataset to choose from, since right now there are only 20.
