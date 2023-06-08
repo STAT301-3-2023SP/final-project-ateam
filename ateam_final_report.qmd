@@ -340,7 +340,7 @@ load(file = "results/tuning_boost_rel.rda")
 
 autoplot(boost_tune_rel, metric = "roc_auc")
 ```
-Similar to the model above, the boosted tree model has the best roc_auc score when the number of randomly selected predictors is 5. 
+Similar to the model above, the boosted tree model has the best roc_auc score as the number of randomly selected predictors increases. Smaller minimum node size seems to improve the roc_auc score.
 
 - **K Nearest Neighbors Model:**
 ```{r}
@@ -406,11 +406,10 @@ load(file = "results/tuning_rf_imp.rda")
 
 autoplot(rf_tune_imp, metric = "roc_auc")
 ```
-<<<<<<< HEAD
+
 After examining all of the different models, it seems that the random forest model had the best overall performance with the roc_auc score. This means it has the best balance between correctly identifying positive cases and avoiding false positive cases. When plotted using the importance recipe, the random forest model still performs very well in both of these areas, further affirming that this is model has the best overall performance.
-=======
+
 When plotted using the importance recipe, the random forest model performs best with a larger number of predictors. 
->>>>>>> 72850496f28667b0921006dcf6c5c038bb48000b
 
 ## Final Model Selection
 Overall, the tree methods seemed to perform the best on this dataset with the random forest and boosted tree models producing the best results. Also, the kitchen sink recipe did better than the relationship recipe, implying that the benefits of more predictors used outweighed the benefits of only using the predictors that displayed relationships with the outcome variable. The importance recipe combined the two, by using more predictors than the relationship recipe and only using variables with predictive importance. However, in the end, the kitchen sink recipe did slightly better than the importance recipe with the random forest model. We think that this may be due to the importance recipe using fewer folds and repeats to shorten the runtime.
