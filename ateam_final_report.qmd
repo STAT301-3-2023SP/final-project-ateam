@@ -227,10 +227,10 @@ result_imp_graph
 All of the models have small confidence intervals, except the neural network with the shortened kitchen sink recipe and the random forest with the importance recipe.
 
 ## Tuning Parameters
-We tuned at fit 9 models in our exploration. Aside from the null model, we added additional parameters to our other models to further improve their performance. Each of these graphs shows the roc_auc curve for each model in both the kitchen sink nd relationship recipes. 
-- As mentioned in the Assessment Measures section, the roc_auc curve provides a visual representation of the relationship between the true positive rate (sensitivity) and the false positive rate (1-specificity).
+We tuned at fit 9 models in our exploration. Aside from the null model, we added additional parameters to our other models to further improve their performance. Each of these graphs shows specific parameters for each model compared to the roc_auc metric to determine when the models perform best.
+- As mentioned in the Assessment Measures section, the roc_auc curve provides a visual representation of the relationship between the true positive rate (sensitivity) and the false positive rate (1-specificity). 
 
-Here are the roc_auc curves for each model:
+Here are the graphs for each model:
 
 ### Kitchen Sink Recipe
 
@@ -397,7 +397,7 @@ load(file = "results/tuning_rf_imp.rda")
 
 autoplot(rf_tune_imp, metric = "roc_auc")
 ```
-After examining all of the different models, it seems that the random forest model had the best overall performance with the roc_auc score. This means it has the best balance between correctly identifying positive cases and avoiding false positive cases. When plotted using the importance recipe, the random forest model still performs very well in both of these areas, further affirming that this is model has the best overall performance.
+When plotted using the importance recipe, the random forest model performs best with a larger number of predictors. 
 
 ## Final Model Selection
 Overall, the tree methods seemed to perform the best on this dataset with the random forest and boosted tree models producing the best results. Also, the kitchen sink recipe did better than the relationship recipe, implying that the benefits of more predictors used outweighed the benefits of only using the predictors that displayed relationships with the outcome variable. The importance recipe combined the two, by using more predictors than the relationship recipe and only using variables with predictive importance. However, in the end, the kitchen sink recipe did slightly better than the importance recipe with the random forest model. We think that this may be due to the importance recipe using fewer folds and repeats to shorten the runtime.
