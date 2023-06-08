@@ -380,7 +380,7 @@ load(file = "results/tuning_svm_poly_rel.rda")
 
 autoplot(svm_poly_tune_ks, metric = "roc_auc")
 ```
-Similar to the model above, within each kernel, this model has extremely varied results. The different scale factors do not have a cohesive cost paramter that has the best roc_auc score, so overall, this model has a relatively low roc_auc score. 
+Similar to the model above, within each kernel, this model has extremely varied results. The different scale factors do not have a cohesive cost parameter that has the best roc_auc score, so overall, this model has a relatively low roc_auc score. 
 
 - **SVM Radial Model:**
 ```{r}
