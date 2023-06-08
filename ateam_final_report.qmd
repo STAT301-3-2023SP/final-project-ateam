@@ -228,14 +228,13 @@ result_imp_graph
 All of the models have small confidence intervals, except the neural network with the shortened kitchen sink recipe and the random forest with the importance recipe.
 
 ## Tuning Parameters
-<<<<<<< HEAD
+
 We tuned at fit 9 models in our exploration. Aside from the null model, we added additional parameters to our other models to further improve their performance. Each of these graphs shows the roc_auc curve for each model in both the kitchen sink nd relationship recipes. 
 
 As mentioned in the Assessment Measures section, the roc_auc curve provides a visual representation of the relationship between the true positive rate (sensitivity) and the false positive rate (1-specificity).
-=======
+
 We tuned at fit 9 models in our exploration. Aside from the null model, we added additional parameters to our other models to further improve their performance. Each of these graphs shows specific parameters for each model compared to the roc_auc metric to determine when the models perform best.
 - As mentioned in the Assessment Measures section, the roc_auc curve provides a visual representation of the relationship between the true positive rate (sensitivity) and the false positive rate (1-specificity). 
->>>>>>> 72850496f28667b0921006dcf6c5c038bb48000b
 
 Here are the graphs for each model:
 
@@ -247,11 +246,9 @@ load(file = "results/tuning_rf_ks.rda")
 
 autoplot(rf_tune_ks, metric = "roc_auc")
 ```
-<<<<<<< HEAD
 In this model, the peak of the curve moves towards the top-left corner, which indicates that this model has a relatively low rate of falsely identifying negative cases as positive. Also, the peak of the curve is approaching the upper-left corner, which means this model has a higher proportion of actual positive cases that were correctly classified as positive. These results show that this model is proficient in its predictions and performs well. 
-=======
+
 For this model, it seems that it has the best roc_auc score when it has around 15 randomly selected predictors. When this occurs, the roc_auc score for this model is relatively high, but otherwise, it doesn't perform very well.
->>>>>>> 72850496f28667b0921006dcf6c5c038bb48000b
 
 - **Boosted Tree Model:**
 ```{r}
