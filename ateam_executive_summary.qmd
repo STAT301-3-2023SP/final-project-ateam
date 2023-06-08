@@ -99,4 +99,8 @@ We expected the svm models to do better than they did. We believe that the reaso
 
 The final model we will use is the random forest with the kitchen sink recipe. We are not surprised, as random forest models typically perform well. However, we are surprised that the kitchen sink recipe performed better than the importance recipe. Again, it is likely due to the number folds and repeats used for each recipe and model.
 
+### Comparing Final Model to Null Model
+Our final model did better than the null model when comparing their area under the ROC curve, but not as well when comparing their accuracy. When comparing their accuracy, our final model performed similarly to the null model. Overall, our final model did significantly better than the null model. So, we think it is worth the effort of building a predictive model. However, the runtime is very long, so we would need find ways to shorten the runtime.
 
+## Conclusion
+In conclusion, the final model performed well but did not fit our purposes to determine what variables make a car exchangeable because our final model ended up being a kitchen sink model that used all of the variables as predictors. The recipes that used variable selection methods had relatively poor model performance when applied. To remedy this, ee think that we need more variables in the dataset to choose from, since right now there are only 20.
