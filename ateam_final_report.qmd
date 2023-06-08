@@ -1,5 +1,5 @@
 ---
-title: "What makes a car exchangeable?"
+title: "What Makes a Car Exchangeable?"
 subtitle: "Data Science 3 with R (STAT 301-3)"
 author: "ateam: Allie Tong & Alani Cox-Caceres"
 
