@@ -24,6 +24,7 @@ from: markdown+emoji
 
 ## Data Overview
 Our [dataset](https://www.kaggle.com/datasets/lepchenkov/usedcarscatalog) consists of variables that describe cars in the used car market in Belarus on December 2, 2019. There are 38531 observations. Our target variable will be `is_exchangeable`, which is a factor variable that indicates `TRUE` if the used car can be exchanged with another car and `FALSE` if the used car cannot be exchanged with another car. There are 19 predictors, of which 1 is an integer, 5 are characters, 7 are numeric, and 6 are factors.
+
 ```{r}
 library(tidyverse)
 library(tidymodels)
@@ -500,4 +501,4 @@ Overall, our final model did significantly better than the null model. So, we th
 ## Conclusion
 In conclusion, the final model performed well but did not fit our purposes to determine what variables make a car exchangeable. Our final model was a kitchen sink model that used all of the variables as predictors. Our relationship recipe that used graph variable selection methods had relatively poor model performance. The importance recipe performed slightly worse with the random forest model. This may have been due to the random forest with the importance recipe using fewer folds and repeats than the random forest model with the kitchen sink recipe.
 
-Our next steps are to run the importance recipe on the rest of the models. We will then adjust tuning parameters based on the trends that we observed that led to higher roc_auc. Overall, we think that we need more variables in the dataset to choose from, as there are only 20 right now. In having more variables, we think our variable selection methods will be more successful, as the benefit of the KS model using more predictors is not as important. With more variables, we will be able to look at what factors make a car exchangeable.
+Our next steps are to run the importance recipe on the rest of the models. We will then adjust tuning parameters based on the trends that we observed that led to higher roc_auc. Overall, we think that we need more variables in the dataset to choose from, as there are only 20 right now. In having more variables, we think our variable selection methods will be more successful, as the benefit of the KS model using more predictors is not as important. We will then be able to look at what factors make a car exchangeable.

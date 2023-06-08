@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.245">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>ateam_executive_summary</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="ateam_executive_summary_files/libs/clipboard/clipboard.min.js"></script>
+<script src="ateam_executive_summary_files/libs/quarto-html/quarto.js"></script>
+<script src="ateam_executive_summary_files/libs/quarto-html/popper.min.js"></script>
+<script src="ateam_executive_summary_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="ateam_executive_summary_files/libs/quarto-html/anchor.min.js"></script>
+<link href="ateam_executive_summary_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="ateam_executive_summary_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="ateam_executive_summary_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="ateam_executive_summary_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="ateam_executive_summary_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+<section id="github-repository" class="level2">
+<h2 class="anchored" data-anchor-id="github-repository">Github Repository</h2>
+<p><a href="https://github.com/STAT301-3-2023SP/final-project-ateam">https://github.com/STAT301-3-2023SP/final-project-ateam</a></p>
+</section>
+<section id="data-overview" class="level2">
+<h2 class="anchored" data-anchor-id="data-overview">Data Overview</h2>
+<p>Our <a href="https://www.kaggle.com/datasets/lepchenkov/usedcarscatalog">dataset</a> consists of variables that describe cars in the used car market in Belarus on December 2, 2019. There are 38531 observations. Our target variable will be <code>is_exchangeable</code>, which is a factor variable that indicates <code>TRUE</code> if the used car can be exchanged with another car and <code>FALSE</code> if the used car cannot be exchanged with another car. There are 19 predictors, of which 1 is an integer, 5 are characters, 7 are numeric, and 6 are factors.</p>
+</section>
+<section id="goal" class="level2">
+<h2 class="anchored" data-anchor-id="goal">Goal</h2>
+<p>In this exploration, we’d like to examine ways to predict if the used cars will be exchangeable based on the variables that affect that outcome the most. This is a categorical prediction problem. We will to explore what factors make a car exchangeable by testing the predictor importance of various predictor variables.</p>
+</section>
+<section id="recipe-building" class="level2">
+<h2 class="anchored" data-anchor-id="recipe-building">Recipe Building</h2>
+<section id="kitchen-sink" class="level3">
+<h3 class="anchored" data-anchor-id="kitchen-sink">Kitchen Sink</h3>
+<p>The kitchen sink recipe uses all of the variables in the dataset as predictors with <code>is_exchangeable</code> as the outcome variable. It will be used as a baseline to see if variable selection improves model performance.</p>
+<p>We first had to use <code>step_other()</code> for <code>model_name</code> to deal with the large number of levels the variable had. Then, we dummy encoded all nominal predictors. After, we removed the variables with zero variance and centered and scaled all variables. Lastly, we used <code>step_impute_knn()</code> to impute missingess and <code>step_corr()</code> to remove variables that have large correlations with other ones.</p>
+<p>There is a full kitchen sink recipe and a shortened kitchen sink recipe. The full kitchen sink recipe is performed on the training set of 26971 variables, while the shortened kitchen sink recipe is performed on a portion of the training set of 4045 variables. For tuning, the full kitchen sink recipe was used with 10 folds and 5 repeats, while the shortened kitchen sink recipe was used with 5 folds and 3 repeats.</p>
+</section>
+<section id="relationship-recipe" class="level3">
+<h3 class="anchored" data-anchor-id="relationship-recipe">Relationship Recipe</h3>
+<p>The relationship recipe uses the variables <code>odometer_value</code>, <code>year_produced</code>, <code>engine_capacity</code>, <code>price_usd</code>, <code>number_of_photos</code>, <code>engine_has_gas</code>, <code>has_warranty</code>, <code>state</code>, <code>drivetrain</code>, <code>location_region</code>, and <code>manufacturer_name</code>. These 11 variables showed possible relationships with the outcome variable <code>is_exchangeable</code>.</p>
+<p>We first dummy encoded all nominal predictors. After, we removed the variables with zero variance and centered and scaled all variables. Lastly, we used <code>step_impute_knn()</code> to impute missingess and <code>step_corr()</code> to remove variables that have large correlations with other ones.</p>
+<p>Similar to the kitchen sink model, there is a full relationship recipe and a shortened relationship recipe. The full relationship recipe is performed on the training set of 26971 variables, while the shortened relationship recipe is performed on a portion of the training set of 4045 variables. For tuning, the full relationship recipe was used with 10 folds and 5 repeats while the shortened relationship recipe was used with 5 folds and 3 repeats.</p>
+</section>
+<section id="importance-recipe" class="level3">
+<h3 class="anchored" data-anchor-id="importance-recipe">Importance Recipe</h3>
+<p>The importance recipe includes variables that had nonzero importance using random forest variable selection. After tuning the random forest model with the kitchen sink model, we looked at each variable’s importance. Displayed below is a table of the variables used and their importance in the random forest model.</p>
+</section>
+</section>
+<section id="models-chosen-parameters" class="level2">
+<h2 class="anchored" data-anchor-id="models-chosen-parameters">Models Chosen + Parameters</h2>
+<p>The models we will be fitting are:</p>
+<ul>
+<li><strong>Null Model</strong> (to use as a baseline):
+<ul>
+<li>Doesn’t have any main arguments</li>
+</ul></li>
+<li><strong>Random Forest Model:</strong>
+<ul>
+<li><code>min_n</code></li>
+<li><code>mtry</code></li>
+</ul></li>
+<li><strong>Boosted Tree Model:</strong>
+<ul>
+<li><code>min_n</code></li>
+<li><code>mtry</code></li>
+<li><code>learn_rate</code></li>
+</ul></li>
+<li><strong>K Nearest Neighbors Model:</strong>
+<ul>
+<li><code>neighbors</code></li>
+</ul></li>
+<li><strong>Elastic Net Model:</strong>
+<ul>
+<li><code>penalty</code></li>
+<li><code>mixture</code></li>
+</ul></li>
+<li><strong>Logistic Regression Model:</strong>
+<ul>
+<li><code>penalty</code></li>
+<li><code>mixture</code></li>
+</ul></li>
+<li><strong>SVM Poly Model:</strong>
+<ul>
+<li><code>cost</code></li>
+<li><code>degree</code></li>
+<li><code>scale_factor</code></li>
+</ul></li>
+<li><strong>SVM Radial Model:</strong>
+<ul>
+<li><code>cost</code></li>
+<li><code>rbf_sigma</code></li>
+</ul></li>
+<li><strong>Multilayer Perceptron Model:</strong>
+<ul>
+<li><code>hidden_units</code></li>
+<li><code>penalty</code></li>
+</ul></li>
+<li><strong>MARS Model:</strong>
+<ul>
+<li><code>num_terms</code></li>
+<li><code>prod_degree</code></li>
+</ul></li>
+</ul>
+</section>
+<section id="assessment-measures" class="level2">
+<h2 class="anchored" data-anchor-id="assessment-measures">Assessment Measures</h2>
+<p>We will use <code>roc_auc</code> as our performance metric for model performance. Once we have picked our final model and fitted it to our testing set, we will look at<code>roc_auc</code>, <code>accuracy</code>, and visualize a confusion matrix as well.</p>
+</section>
+<section id="final-model-selection" class="level2">
+<h2 class="anchored" data-anchor-id="final-model-selection">Final Model Selection</h2>
+<p>Overall, the tree methods seemed to perform the best on this dataset with the random forest and boosted tree models producing the best results. Also, the kitchen sink recipe did better than the relationship recipe, implying that the benefits of more predictors used outweighed the benefits of only using the predictors that displayed relationships with the outcome variable. The importance recipe combined the two, by using more predictors than the relationship recipe and only using variables with predictive importance. However, in the end, the kitchen sink recipe did slightly better than the importance recipe with the random forest model. We think that this may be due to the importance recipe using fewer folds and repeats to shorten the runtime.</p>
+<p>We expected the svm models to do better than they did. We believe that the reasoning behind the svm performing worse than expected is also due to the need to use fewer folds and repeats and to cut down the training set. When we originally ran the svm models, the models were running for over 48 hours. So, we decided to cut down the number of folds and repeats and the recipe to save runtime.</p>
+<p>The final model we will use is the random forest with the kitchen sink recipe. We are not surprised, as random forest models typically perform well. However, we are surprised that the kitchen sink recipe performed better than the importance recipe. Again, it is likely due to the number folds and repeats used for each recipe and model.</p>
+<section id="comparing-final-model-to-null-model" class="level3">
+<h3 class="anchored" data-anchor-id="comparing-final-model-to-null-model">Comparing Final Model to Null Model</h3>
+<p>Our final model did better than the null model when comparing their area under the ROC curve, but not as well when comparing their accuracy. When comparing their accuracy, our final model performed similarly to the null model. Overall, our final model did significantly better than the null model. So, we think it is worth the effort of building a predictive model. However, the runtime is very long, so we would need find ways to shorten the runtime.</p>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>In conclusion, the final model performed well but did not fit our purposes to determine what variables make a car exchangeable because our final model ended up being a kitchen sink model that used all of the variables as predictors. The recipes that used variable selection methods had relatively poor model performance when applied. To remedy this, ee think that we need more variables in the dataset to choose from, since right now there are only 20.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
