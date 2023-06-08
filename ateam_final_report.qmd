@@ -257,7 +257,7 @@ load(file = "results/tuning_boost_ks.rda")
 
 autoplot(boost_tune_ks, metric = "roc_auc")
 ```
-This model looks very similar to the random forest model, and produces the same advantages as that model. This model performs best with a higher number of predictors.
+This model looks very similar to the random forest model, and produces the same advantages as that model. This model performs best with a higher number of predictors and a smaller minimal node size.
 
 - **K Nearest Neighbors Model:**
 ```{r}
