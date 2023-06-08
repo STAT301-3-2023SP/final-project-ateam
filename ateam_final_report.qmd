@@ -240,7 +240,7 @@ load(file = "results/tuning_rf_ks.rda")
 
 autoplot(rf_tune_ks, metric = "roc_auc")
 ```
-In this model, the peak of the curve moves towards the top-left corner, which indicates that this model has a relatively low rate of falsely identifying negative cases as positive. Also, the peak of the curve is approaching the upper-left corner, which means this model has a higher proportion of actual positive cases that were correctly classified as positive. These results show that this model is proficient in its predictions and performes well. 
+For this model, it seems that it has the best roc_auc score when it has around 5 randomly selected predictors. When this occurs, the roc_auc score for this model is relatively high, but otherwise, it doesn't perform very well.
 
 - **Boosted Tree Model:**
 ```{r}
