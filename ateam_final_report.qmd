@@ -228,7 +228,10 @@ result_imp_graph
 All of the models have small confidence intervals, except the neural network with the shortened kitchen sink recipe and the random forest with the importance recipe.
 
 ## Tuning Parameters
-We tuned at fit 9 models in our exploration. Aside from the null model, we added additional parameters to our other models to further improve their performance. Here are the parameters used and their outcomes:
+We tuned at fit 9 models in our exploration. Aside from the null model, we added additional parameters to our other models to further improve their performance. Each of these graphs shows the roc_auc curve for each model in both the kitchen sink nd relationship recipes. 
+- As mentioned in the Assessment Measures section, the roc_auc curve provides a visual representation of the relationship between the true positive rate (sensitivity) and the false positive rate (1-specificity).
+
+Here are the roc_auc curves for each model:
 
 ### Kitchen Sink Recipe
 
@@ -238,6 +241,7 @@ load(file = "results/tuning_rf_ks.rda")
 
 autoplot(rf_tune_ks, metric = "roc_auc")
 ```
+In this model, the peak of the curve moves towards the top-left corner, which indicates that this model has a relatively low rate of falsely identifying negative cases as positive. Also, the peak of the curve is approaching the upper-left corner, which means this model has a higher proportion of actual positive cases that were correctly classified as positive. These results show that this model is proficient in its predictions and performes well. 
 
 - **Boosted Tree Model:**
 ```{r}
@@ -245,6 +249,7 @@ load(file = "results/tuning_boost_ks.rda")
 
 autoplot(boost_tune_ks, metric = "roc_auc")
 ```
+This model looks very similar to the random forest model, and produces the same advantages as that model. It is a bit shorter than the random forest, and the curve is not as concave, so its performance isn't as great relative to the random forest, but this model still performs relatively well.
 
 - **K Nearest Neighbors Model:**
 ```{r}
@@ -252,27 +257,35 @@ load(file = "results/tuning_knn_ks.rda")
 
 autoplot(knn_tune_ks, metric = "roc_auc")
 ```
-        
+The roc_auc curve for this model has a very high end point towards the top-right corner, which means it is less likely to falsely identify a negative case as positive, but the peak of the curve isn't very close to the top-left corner, which indicates that it has a relatively low proportion of actual positive cases that were correctly classified as positive.
+
+This model also has a high number of neighbors, which means it can take into account a larger number of data points from different classes, but this also means it may be more. robust and could lose information for some of the smaller details. 
+    
 - **Elastic Net Model:**
 ```{r}
 load(file = "results/tuning_en_ks.rda")
 
 autoplot(en_tune_ks, metric = "roc_auc")
 ```
-        
+This model faces the opposite way of the previous model, which means it is highly proficient in correctly identifying positive cases, but the peak of the curve approaches the upper-right corner, which means this model is poor at avoiding false positive errors.
+
+However, this graph also tests the amount of regularization. Regularization is a method that is used to prevent overfitting. This model has high regularization, which means means the model is more restricted, which may help to prevent overfitting.
+
 - **Logistic Regression Model:**
 ```{r}
 load(file = "results/tuning_log_reg_ks.rda")
 
 autoplot(log_reg_tune_ks, metric = "roc_auc")
 ```
-        
+This graph looks very similar to the previous one. It indicates that this model has high proficiency in correctly identifying positive cases, poor proficiency in avoiding false positive errors, but is relatively good at avoiding overfitting. 
+
 - **MARS Model:**
 ```{r}
 load(file = "results/tuning_mars_ks.rda")
 
 autoplot(mars_tune_ks, metric = "roc_auc")
 ```
+This model has a high proficiency in correctly identifying positive cases, but performs relatively poorly when attempting to avoid false positive cases.
 
 - **Multilayer Perceptron Model:**
 ```{r}
@@ -280,6 +293,11 @@ load(file = "results/tuning_nn_ks.rda")
 
 autoplot(nn_tune_ks, metric = "roc_auc")
 ```
+This model contains a multitude of results, but the general shape of the curves indicates that this model has a high proportion of correctly identified positive cases, but is very poor at avoiding false positive errors. 
+
+It also has a high number of hidden units, which means it has a more complex model structure with more patterns and representations. 
+
+Even so, the results are varied, so this model is a poor representation of a good roc_auc score. 
 
 - **SVM Poly Model:**
 ```{r}
@@ -287,6 +305,11 @@ load(file = "results/tuning_svm_poly_ks.rda")
 
 autoplot(svm_poly_tune_ks, metric = "roc_auc")
 ```
+The SVM Poly Model contains different degrees of interaction. Each of these degrees refers to the polynomial degree that is used in the kernel function. The kernel function determines how the data is transformed and separated in a higher-dimensional feature space. Degree 1 is a linear kernel, degree 2 is a quadratic kernel, and degree 3 is a higher-degree polynomial kernel. 
+
+These graphs also test the cost parameter. The cost parameter determines the penalty for incorrectly classifying training examples, and influences the width and number of support vectors in an SVM Poly Model.
+
+In each of these graphs, the results vary heavily among each of the scale factors. This means that although this model can perform well, it's overall roc_auc score is relatively low.
 
 - **SVM Radial Model:**
 ```{r}
@@ -294,6 +317,9 @@ load(file = "results/tuning_svm_rad_ks.rda")
 
 autoplot(svm_rad_tune_ks, metric = "roc_auc")
 ```
+In an SVM Radial model, the radial basis function parameter sigma determines the width of the kernel that is used to transform the data into a higher-dimensional feature space. 
+
+This model performs similarly to the previous one in that the results are quite varied among each radial basis function sigma. This means that overall, the model has relatively low performance when tested using the roc_auc metric, and has varied widths with each kernel. 
 
 ### Relationship Recipe
 
@@ -303,6 +329,7 @@ load(file = "results/tuning_rf_rel.rda")
 
 autoplot(rf_tune_rel, metric = "roc_auc")
 ```
+For this recipe, it seems that the random forest model has the best roc_auc score when it has around 5 randomly selected predictors. When this occurs, the roc_auc score for this model is relatively high, but otherwise, it doesn't perform very well.
 
 - **Boosted Tree Model:**
 ```{r}
@@ -310,6 +337,7 @@ load(file = "results/tuning_boost_rel.rda")
 
 autoplot(boost_tune_rel, metric = "roc_auc")
 ```
+Similar to the model above, the boosted tree model has the best roc_auc score when the number of randomly selected predictors is 5. 
 
 - **K Nearest Neighbors Model:**
 ```{r}
@@ -317,6 +345,7 @@ load(file = "results/tuning_knn_rel.rda")
 
 autoplot(knn_tune_rel, metric = "roc_auc")
 ```
+This model has a high roc_auc score, which means it maintains a good balance of correctly identified positive cases, and identifying false positive cases. It also has the best performance with a higher number of neighbors. 
         
 - **Elastic Net Model:**
 ```{r}
@@ -324,6 +353,7 @@ load(file = "results/tuning_en_rel.rda")
 
 autoplot(en_tune_rel, metric = "roc_auc")
 ```
+The elastic net model has the best roc_auc score when the amount of regularization is between 0 and 1e-02. In this range, the roc_auc score is highest, and the amount of regularization means the model is also is relatively more proficient at preventing overfitting.
         
 - **Logistic Regression Model:**
 ```{r}
@@ -331,6 +361,7 @@ load(file = "results/tuning_log_reg_rel.rda")
 
 autoplot(log_reg_tune_rel, metric = "roc_auc")
 ```
+This model performs similarly to the previous on with the highest roc_auc score occurring when the amount of regularization remains between 0 and 1e-02.
         
 - **MARS Model:**
 ```{r}
@@ -338,6 +369,7 @@ load(file = "results/tuning_mars_rel.rda")
 
 autoplot(mars_tune_rel, metric = "roc_auc")
 ```
+For both degrees of interaction, this model has the highest roc_auc score with 5 model terms. The model terms refer to the individual functions that make up the MARS model, so in this case, the more components the MARS model has, the better its roc_auc performance will be.
 
 - **Multilayer Perceptron Model:**
 ```{r}
@@ -345,6 +377,7 @@ load(file = "results/tuning_nn_rel.rda")
 
 autoplot(nn_tune_ks, metric = "roc_auc")
 ```
+Depending on which layer of the model is being observed, this model has varying degrees of roc_auc performance as well as what number of hidden units determines the best roc_auc performance. Because these results are so varied, it shows that the overall performance of this model is relatively poor.
 
 - **SVM Poly Model:**
 ```{r}
@@ -352,6 +385,7 @@ load(file = "results/tuning_svm_poly_rel.rda")
 
 autoplot(svm_poly_tune_ks, metric = "roc_auc")
 ```
+Similar to the model above, within each kernel, this model has extremely varied results. The different scale factors do not have a cohesive cost paramter that has the best roc_auc score, so overall, this model has a relatively low roc_auc score. 
 
 - **SVM Radial Model:**
 ```{r}
@@ -359,6 +393,7 @@ load(file = "results/tuning_svm_rad_rel.rda")
 
 autoplot(svm_rad_tune_ks, metric = "roc_auc")
 ```
+This model is also varied in its roc_auc score for each radial basis function sigma, which means it has a relatively poor overall roc_auc score. 
 
 ### Importance Recipe
 
@@ -368,6 +403,7 @@ load(file = "results/tuning_rf_imp.rda")
 
 autoplot(rf_tune_imp, metric = "roc_auc")
 ```
+After examining all of the different models, it seems that the random forest model had the best overall performance with the roc_auc score. This means it has the best balance between correctly identifying positive cases and avoiding false positive cases. When plotted using the importance recipe, the random forest model sstill performs very well in both of these areas, further affirming that this is model has the best overall performance.
 
 ## Final Model Selection
 Overall, the tree methods seemed to perform the best on this dataset with the random forest and boosted tree models producing the best results. Also, the kitchen sink recipe did better than the relationship recipe, implying that the benefits of more predictors used outweighed the benefits of only using the predictors that displayed relationships with the outcome variable. The importance recipe combined the two, by using more predictors than the relationship recipe and only using variables with predictive importance. However, in the end, the kitchen sink recipe did slightly better than the importance recipe with the random forest model. We think that this may be due to the importance recipe using fewer folds and repeats to shorten the runtime.
