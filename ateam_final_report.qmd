@@ -42,11 +42,6 @@ cars_split <- initial_split(cars,
 
 cars_train <- training(cars_split)
 cars_test <- testing(cars_split)
-
-# test for balance
-ggplot(cars_train, mapping = aes(x = is_exchangeable, fill = is_exchangeable)) +
-  geom_bar() +
-  theme_minimal()
 ```
 
 
@@ -134,13 +129,13 @@ The models we will be fitting are:
   - Tuning parameters:
     - `min_n`: The number of predictors that will be randomly sampled at each split when creating the tree models
     - `mtry`: The number of predictors that will be randomly sampled at each split when creating the tree models
-      - Set an upper bound of 17 (max number of predictors a recipe would have)
+      - Set an upper bound of the max number of predictors a recipe would have
 
 - **Boosted Tree Model:** A model that creates a series of decision trees forming an ensemble. Each tree depends on the results of previous trees. All trees in the ensemble are combined to produce a final prediction.
-  - Tuning parameters: 
+  - Tuning parameters:
     -`min_n`: The minimum number of data points in a node that is required for the node to be split further
     - `mtry`: The number (or proportion) of predictors that will be randomly sampled at each split when creating the tree models
-      - Set an upper bound of 17 (max number of predictors a recipe would have)
+      - Set an upper bound of the max number of predictors a recipe would have
     - `learn_rate`: The rate at which the boosting algorithm adapts from iteration-to-iteration
 
 - **K Nearest Neighbors Model:** A model that uses the *K* most similar data points from the training set to predict new samples
@@ -231,7 +226,7 @@ All of the models have small confidence intervals, except the neural network wit
 
 ## Tuning Parameters
 
-We tuned at fit 9 models in our exploration. Aside from the null model, we added additional parameters to our other models to further improve their performance. Each of these graphs shows the roc_auc curve for each model in both the kitchen sink nd relationship recipes. 
+We tuned 9 models in our exploration. We will now look at the tuning parameters of the models to see how we can further improve their performance. Each of these graphs shows the roc_auc curve for each model in both the kitchen sink and relationship recipes. 
 
 As mentioned in the Assessment Measures section, the roc_auc curve provides a visual representation of the relationship between the true positive rate (sensitivity) and the false positive rate (1-specificity).
 
@@ -245,8 +240,6 @@ load(file = "results/tuning_rf_ks.rda")
 
 autoplot(rf_tune_ks, metric = "roc_auc")
 ```
-In this model, the peak of the curve moves towards the top-left corner, which indicates that this model has a relatively low rate of falsely identifying negative cases as positive. Also, the peak of the curve is approaching the upper-left corner, which means this model has a higher proportion of actual positive cases that were correctly classified as positive. These results show that this model is proficient in its predictions and performs well. 
-
 For this model, it seems that it has the best roc_auc score as the number of randomly selected predictors increases. A higher minimal node score seems to improve the roc_auc score as well.
 
 - **Boosted Tree Model:**
@@ -255,7 +248,7 @@ load(file = "results/tuning_boost_ks.rda")
 
 autoplot(boost_tune_ks, metric = "roc_auc")
 ```
-This model looks very similar to the random forest model, and produces the same advantages as that model. This model performs best with a higher number of predictors and a smaller minimal node size.
+This model looks very similar to the random forest model. This model performs best with a higher number of predictors. However, unlike the random forest model, it seems to perform better with a smaller minimal node size. The learning rate does not seem to heavily affect the roc_auc score.
 
 - **K Nearest Neighbors Model:**
 ```{r}
@@ -271,7 +264,7 @@ load(file = "results/tuning_en_ks.rda")
 
 autoplot(en_tune_ks, metric = "roc_auc")
 ```
-This model has the best roc_auc score when it has lower levels of regularization. Regularization is a method that is used to prevent overfitting. At it's best, this model has low regularization, which means means the model is less restricted, which can cause overfitting.
+This model has the best roc_auc score when it has lower levels of regularization. Regularization is a method that is used to prevent overfitting. At its best, this model has low regularization, which means means the model is less restricted, sometimes leading to overfitting.
 
 - **Logistic Regression Model:**
 ```{r}
@@ -295,9 +288,7 @@ load(file = "results/tuning_nn_ks.rda")
 
 autoplot(nn_tune_ks, metric = "roc_auc")
 ```
-This model performance varies as the amount of regularization changes. There is not a clear trend of what amount of regularization leads to a higher roc_auc score.
-
-In general, it seems that the model performs better with a lower of hidden units, which means it has a less complex model structure with less patterns and representations. 
+This model performance varies as the amount of regularization changes. There is not a clear trend of what amount of regularization leads to a higher roc_auc score. In general, it seems that the model performs better with a lower of hidden units, which means it has a less complex model structure with less patterns and representations. 
 
 
 - **SVM Poly Model:**
@@ -310,7 +301,7 @@ The SVM Poly Model contains different degrees of interaction. Each of these degr
 
 These graphs also test the cost parameter. The cost parameter determines the penalty for incorrectly classifying training examples, and influences the width and number of support vectors in an SVM Poly Model.
 
-In each of these graphs, the results vary heavily among each of the scale factors, with the higher scale factors performing better. Generally, cost does not seem to affect the roc_auc score. This means that although this model can perform well, it's overall roc_auc score is relatively low.
+In each of these graphs, the results vary heavily among each of the scale factors, with the higher scale factors performing better. Generally, a cost around 2 leads to a higher roc_auc score. This means that although this model can perform well, its overall roc_auc score is relatively low.
 
 - **SVM Radial Model:**
 ```{r}
@@ -338,7 +329,7 @@ load(file = "results/tuning_boost_rel.rda")
 
 autoplot(boost_tune_rel, metric = "roc_auc")
 ```
-The boosted tree model with the relationship recipe has the best roc_auc score as the number of randomly selected predictors increases. Smaller minimum node size seems to improve the roc_auc score. The learning rate does not seem to affect thr roc_auc score.
+The boosted tree model with the relationship recipe has a higher roc_auc score as the number of randomly selected predictors increases. Smaller minimum node size seems to improve the roc_auc score. The learning rate does not seem to affect the roc_auc score.
 
 - **K Nearest Neighbors Model:**
 ```{r}
@@ -354,7 +345,7 @@ load(file = "results/tuning_en_rel.rda")
 
 autoplot(en_tune_rel, metric = "roc_auc")
 ```
-The elastic net model has the best roc_auc score when the amount of regularization is around 1e-03. Generally, a range of 0 to 1e-03 leads to a higher roc_auc score. In this range, the roc_auc score is highest, and the amount of regularization means the model is relatively more proficient at preventing overfitting.
+The elastic net model has the best roc_auc score when the amount of regularization is around 1e-03. Generally, a range of 0 to 1e-03 leads to a higher roc_auc score. In this range, the roc_auc score is highest, and the lower amount of regularization means the model is relatively more prone to overfitting.
         
 - **Logistic Regression Model:**
 ```{r}
@@ -362,7 +353,7 @@ load(file = "results/tuning_log_reg_rel.rda")
 
 autoplot(log_reg_tune_rel, metric = "roc_auc")
 ```
-This model performs similarly to the previous on with the highest roc_auc score occurring when the amount of regularization remains between 0 and 1e-03.
+This model performs similarly to the previous one with the highest roc_auc score occurring when the amount of regularization remains between 0 and 1e-03.
         
 - **MARS Model:**
 ```{r}
@@ -370,7 +361,7 @@ load(file = "results/tuning_mars_rel.rda")
 
 autoplot(mars_tune_rel, metric = "roc_auc")
 ```
-For both degrees of interaction, this model has the highest roc_auc score as the number of model terms increases. 2 degrees of intereaction also lead to a higher roc_auc score.
+For both degrees of interaction, this model has the highest roc_auc score as the number of model terms increases. 2 degrees of interaction also leads to a higher roc_auc score.
 
 - **Multilayer Perceptron Model:**
 ```{r}
@@ -492,14 +483,19 @@ null_vs_rf %>%
   kbl() %>% 
   kable_styling()
 ```
-Our final model did better than the null model when comparing their area under the ROC curve, but not as well when comparing their accuracy. When comparing their accuracy, our final model performed similarly to the null model. Overall, accuracy is based on one specific cutpoint, while ROC tries all of the cutpoint and plots and the sensitivity and specificity. So when we compare the overall accuracy, we are comparing the accuracy based on a designated cutpoint. The overall accuracy varies from different cutpoints. Therefore, our final model's accuracy being worse than its area under the ROC curve may be due to choosing a cutpoint that yields a lower accuracy.
+Our final model did better than the null model when comparing their area under the ROC curve and accuracy. However, the accuracy is slightly lower. Overall, accuracy is based on one specific cutpoint, while ROC tries all of the cutpoint and plots and the sensitivity and specificity. So when we compare the overall accuracy, we are comparing the accuracy based on a designated cutpoint. The overall accuracy varies from different cutpoints. Therefore, our final model's accuracy being worse than its area under the ROC curve may be due to choosing a cutpoint that yields a lower accuracy.
 
 Overall, our final model did significantly better than the null model, so we think it is worth the effort of building a predictive model. However, the runtime is very long, so we would need find ways to shorten the runtime. In shortening the runtime, we need to be careful to not worsen model performance, as uing fewer folds and repeats or shortening the training set can cause model predictions to be less accurate.
 
 ## Conclusion
-In conclusion, the final model performed well but did not fit our purposes to determine what variables make a car exchangeable. Our final model was a kitchen sink model that used all of the variables as predictors. Our relationship recipe that used graph variable selection methods had relatively poor model performance. The importance recipe performed slightly worse with the random forest model. This may have been due to the random forest with the importance recipe using fewer folds and repeats than the random forest model with the kitchen sink recipe.
+In conclusion, the final model performed well but did not fit our purposes to determine what variables make a car exchangeable, as our final model was a kitchen sink model that used all of the variables as predictors. Our relationship recipe that used graph variable selection methods had relatively poor model performance. The importance recipe performed slightly worse than the kitchen sink recipe on the random forest model. This may have been due to the random forest with the importance recipe using fewer folds and repeats than the random forest model with the kitchen sink recipe.
 
-Our next steps are to run the importance recipe on the rest of the models. We will then adjust tuning parameters based on the trends that we observed that led to higher roc_auc. Overall, we think that we need more variables in the dataset to choose from, as there are only 20 right now. In having more variables, we think our variable selection methods will be more successful, as the benefit of the KS model using more predictors is not as important. We will then be able to look at what factors make a car exchangeable.
+Our next steps are to run the importance recipe on the rest of the models. We will also adjust tuning parameters based on the trends that we observed that led to higher roc_auc. Overall, we think that we need more variables in the dataset to choose from, as there are only 20 right now. In having more variables, we think our variable selection methods will be more successful, as the benefit of the KS model using more predictors is not as important. We will then be able to look at what factors make a car exchangeable.
 
 ## References
+Chan, Carmen. (2022, August 23). *What Is a ROC Curve and How to Interpret It*. Displayr. https://www.displayr.com/what-is-a-roc-curve-how-to-interpret-it/
+
 Kirill Lepchenkov (2019, December 2). *Used Cars Catalog*. Kaggle. https://www.kaggle.com/datasets/lepchenkov/usedcarscatalog
+
+Singh, Vikram (2023, March 6). *ROC-AUC vs Accuracy: Which Metric Is More Important?*. Naukri. https://www.naukri.com/learning/articles/roc-auc-vs-accuracy/
+

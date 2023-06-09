@@ -123,6 +123,23 @@ We expected the svm models to do better than they did. We believe that the reaso
 
 The final model we will use is the random forest with the kitchen sink recipe. We are not surprised, as random forest models do well in managing outliers and in preventing overfitting. Also, as mentioned before, the tree method seems to do well in predicting `is_exchangeable`. However, we are surprised that the kitchen sink recipe performed better than the importance recipe. Again, it is likely due to the number folds and repeats used for each recipe and model.
 
+## Final Model Analysis
+Now that we have chosen our best model, we will complete our final model workflow and fit it to the testing data.
+
+Class probabilities are an estimation of the probability that an observation belongs to each class for `is_exchangeable` (`TRUE` or `FALSE`) in a set of classes (`TRUE` and `FALSE`). 
+
+So, `.pred_TRUE = 0.51` and `.pred_FALSE = 0.49` would imply that our model had trouble classifying the car, whereas `.pred_TRUE = 0.95` and `.pred_FALSE = 0.05` would imply that my model confidently classified a car as being exchangeable.
+
+The table below shows the observations of `is_exchangeable` in the testing data and compares it to what the final model predicted its `is_exchangeable` value would be.
+
+```{r}
+load(file = "results/final_result")
+final_result %>% 
+  rename(prediction = .pred_class) %>% 
+  kbl() %>% 
+  kable_styling()
+```
+
 ### Comparing Final Model to Null Model
 ```{r}
 load(file = "results/tuned_null.rda")
@@ -139,12 +156,17 @@ null_vs_rf %>%
   kable_styling()
 ```
 
-Our final model did better than the null model when comparing their area under the ROC curve, but not as well when comparing their accuracy. When comparing their accuracy, our final model performed similarly to the null model. Overall, our final model did significantly better than the null model, so we think it is worth the effort of building a predictive model. However, the runtime is very long, so we would need find ways to shorten the runtime. In shortening the runtime, we need to be careful to not worsen model performance, as using fewer folds and repeats or shortening the training set can cause model predictions to be less accurate.
+Our final model did better than the null model when comparing their area under the ROC curve and accuracy. Overall, the final model did significantly better than the null model, so we think it is worth the effort of building a predictive model. However, the runtime is very long, so we would need find ways to shorten the runtime. In shortening the runtime, we need to be careful to not worsen model performance, as using fewer folds and repeats or shortening the training set can cause model predictions to be less accurate.
 
 ## Conclusion
-In conclusion, the final model performed well but did not fit our purposes to determine what variables make a car exchangeable. Our final model was a kitchen sink model that used all of the variables as predictors. Our relationship recipe that used graph variable selection methods had relatively poor model performance. The importance recipe performed slightly worse with the random forest model. This may have been due to the random forest with the importance recipe using fewer folds and repeats than the random forest model with the kitchen sink recipe.
+In conclusion, the final model performed well but did not fit our purposes to determine what variables make a car exchangeable, as our final model was a kitchen sink model that used all of the variables as predictors. Our relationship recipe that used graph variable selection methods had relatively poor model performance. The importance recipe performed slightly worse than the kitchen sink recipe on the random forest model. This may have been due to the random forest with the importance recipe using fewer folds and repeats than the random forest model with the kitchen sink recipe.
 
-Our next steps are to run the importance recipe on the rest of the models. We will then adjust tuning parameters based on the trends that we observed that led to higher roc_auc. Overall, we think that we need more variables in the dataset to choose from, as there are only 20 right now. In having more variables, we think our variable selection methods will be more successful, as the benefit of the KS model using more predictors is not as important. We will then be able to look at what factors make a car exchangeable.
+Our next steps are to run the importance recipe on the rest of the models. We will also adjust tuning parameters based on the trends that we observed that led to higher roc_auc. Overall, we think that we need more variables in the dataset to choose from, as there are only 20 right now. In having more variables, we think our variable selection methods will be more successful, as the benefit of the KS model using more predictors is not as important. We will then be able to look at what factors make a car exchangeable.
 
 ## References
+Chan, Carmen. (2022, August 23). *What Is a ROC Curve and How to Interpret It*. Displayr. https://www.displayr.com/what-is-a-roc-curve-how-to-interpret-it/
+
 Kirill Lepchenkov (2019, December 2). *Used Cars Catalog*. Kaggle. https://www.kaggle.com/datasets/lepchenkov/usedcarscatalog
+
+Singh, Vikram (2023, March 6). *ROC-AUC vs Accuracy: Which Metric Is More Important?*. Naukri. https://www.naukri.com/learning/articles/roc-auc-vs-accuracy/
+
